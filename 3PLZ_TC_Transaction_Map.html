@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3PLZ POC — Test Case Transaction Map v2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;font-size:13px;background:#f8f8f6;color:#1a1a18}
+h1{font-size:17px;font-weight:500;padding:16px 20px 0;color:#1a1a18}
+.subtitle{font-size:12px;color:#6b6b67;padding:2px 20px 14px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 12px;align-items:center}
+.controls select,.controls input{font-size:12px;padding:5px 8px;border:0.5px solid #c8c8c0;border-radius:6px;background:#fff;color:#1a1a18;height:30px}
+.controls input{width:220px}
+.controls label{font-size:12px;color:#6b6b67}
+.stats{display:flex;gap:16px;padding:0 20px 10px;flex-wrap:wrap}
+.stat{font-size:12px;color:#6b6b67;background:#fff;border:0.5px solid #e0e0d8;border-radius:6px;padding:4px 10px}
+.stat b{color:#1a1a18;font-weight:500}
+.table-wrap{overflow-x:auto;padding:0 20px 24px}
+table{width:100%;border-collapse:collapse;background:#fff;border:0.5px solid #e0e0d8;border-radius:8px;overflow:hidden}
+thead tr{background:#f1f0ea}
+th{text-align:left;padding:8px 10px;font-size:11px;font-weight:500;color:#6b6b67;text-transform:uppercase;letter-spacing:.04em;border-bottom:0.5px solid #e0e0d8;white-space:nowrap}
+td{padding:7px 10px;border-bottom:0.5px solid #f0efe8;vertical-align:top;line-height:1.45}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafaf7}
+.tc{font-family:monospace;font-size:11px;color:#185FA5;white-space:nowrap;font-weight:500}
+.cr-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.layer-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.risk-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.risk-critical{background:#FCEBEB;color:#A32D2D}
+.risk-high{background:#FAEEDA;color:#854F0B}
+.risk-medium{background:#EAF3DE;color:#3B6D11}
+.risk-low{background:#E6F1FB;color:#185FA5}
+.dir-in{background:#EAF3DE;color:#3B6D11}
+.dir-out{background:#E6F1FB;color:#185FA5}
+.dir-ctrl{background:#F1EFE8;color:#5F5E5A}
+.dir-api{background:#EEEDFE;color:#3C3489}
+.path{font-size:11px;color:#3a3a38;line-height:1.6;font-family:monospace}
+.arrow{color:#b0a090}
+.zone{color:#185FA5;font-weight:500}
+.enforce{color:#639922;font-style:italic}
+.source-dest{font-size:11px;color:#1a1a18;font-family:monospace;white-space:nowrap}
+.note{font-size:11px;color:#6b6b67}
+.hidden{display:none}
+.cr1{background:#EEEDFE;color:#3C3489}
+.cr2{background:#E1F5EE;color:#085041}
+.cr3{background:#FAECE7;color:#993C1D}
+.cr4{background:#FBEAF0;color:#72243E}
+.cr5{background:#E6F1FB;color:#0C447C}
+.cr6{background:#FAEEDA;color:#854F0B}
+.cr7{background:#EAF3DE;color:#27500A}
+.cripx{background:#F1EFE8;color:#5F5E5A}
+.crsvc{background:#FAEEDA;color:#712B13}
+.crasa{background:#FBEAF0;color:#72243E}
+.crcnn{background:#E1F5EE;color:#085041}
+.crent{background:#E6F1FB;color:#0C447C}
+.dir-enroll{background:#FAEEDA;color:#712B13}
+.lsvc{background:#FAEEDA;color:#712B13}
+.l1{background:#EAF3DE;color:#3B6D11}
+.l2{background:#E6F1FB;color:#185FA5}
+.l3{background:#FAECE7;color:#993C1D}
+.l4{background:#FBEAF0;color:#72243E}
+.lip{background:#EEEDFE;color:#3C3489}
+.ltp{background:#F1EFE8;color:#5F5E5A}
+</style>
+</head>
+<body>
+<h1>3PLZ POC — Test Case Transaction Map</h1>
+<div class="subtitle">116 test cases · CR-01–07 (37) + IPSec (22) + SVCINFRA (20) + ASA/CONN/ENT (37)</div>
+
+<div class="controls">
+  <label>Filter group:</label>
+  <select id="grpFilter">
+    <option value="">All groups</option>
+    <option value="CR-01">CR-01 mTLS CA Isolation</option>
+    <option value="CR-02">CR-02 SSH Managed Access</option>
+    <option value="CR-03">CR-03 DNS Rewriting</option>
+    <option value="CR-04">CR-04 Tenant Lifecycle</option>
+    <option value="CR-05">CR-05 Multi-Tenant Isolation</option>
+    <option value="CR-06">CR-06 Outbound Governed Access</option>
+    <option value="CR-07">CR-07 Inspection Plane</option>
+    <option value="IPSec-VTI">IPSec-VTI Route-Based</option>
+    <option value="IPSec-CM">IPSec-CM Policy-Based</option>
+    <option value="IPSec-XFORM">IPSec-XFORM Transform Compliance</option>
+    <option value="IPSec-LIFE">IPSec-LIFE Tunnel Lifecycle</option>
+    <option value="SVCINFRA-CERT">SVCINFRA-CERT Cert Delivery</option>
+    <option value="SVCINFRA-OTP">SVCINFRA-OTP OTP Delivery</option>
+    <option value="IPSec-ASA">IPSec-ASA Cisco ASA</option>
+    <option value="IPSec-CONN">IPSec-CONN Data Plane Connectivity</option>
+    <option value="ENT-VTI">ENT-VTI Enterprise PAN-OS VTI</option>
+    <option value="ENT-HA">ENT-HA PAN-OS HA/FT Failover</option>
+    <option value="ENT-SNAT">ENT-SNAT Dual-SNAT Correctness</option>
+    <option value="ENT-ZONE">ENT-ZONE PAN-OS Zone Policy</option>
+    <option value="ENT-VLAN">ENT-VLAN 802.1Q P2P Trunk</option>
+  </select>
+  <select id="layerFilter">
+    <option value="">All layers</option>
+    <option value="1">Layer 1 — Single Tenant</option>
+    <option value="2">Layer 2 — Multi-Tenant</option>
+    <option value="3">Layer 3 — Adversarial</option>
+    <option value="4">Layer 4 — Lifecycle</option>
+    <option value="I-Plane">Inspection Plane</option>
+    <option value="Transport">Transport (IPSec pre-flight)</option>
+    <option value="SVCINFRA">SVCINFRA (pre-flight gate)</option>
+  </select>
+  <select id="riskFilter">
+    <option value="">All risk levels</option>
+    <option value="Critical">Critical</option>
+    <option value="High">High</option>
+    <option value="Medium">Medium</option>
+    <option value="Low">Low</option>
+  </select>
+  <select id="dirFilter">
+    <option value="">All directions</option>
+    <option value="Inbound">Inbound (Partner→Enterprise)</option>
+    <option value="Outbound">Outbound (Enterprise→Partner)</option>
+    <option value="Control">Control plane / IKEv2</option>
+    <option value="API">API / Lifecycle</option>
+    <option value="Enrollment">Enrollment / Pre-auth</option>
+  </select>
+  <input type="text" id="search" placeholder="Search TC ID, path, workload…">
+</div>
+
+<div class="stats">
+  <div class="stat">Showing <b id="shown">116</b> of 116 tests</div>
+  <div class="stat">Critical: <b>29</b></div>
+  <div class="stat">High: <b>62</b></div>
+  <div class="stat">Medium: <b>11</b></div>
+  <div class="stat">Low: <b>4</b></div>
+</div>
+
+<div class="table-wrap">
+<table id="tcTable">
+<thead>
+<tr>
+  <th style="width:130px">TC ID</th>
+  <th style="width:90px">Group</th>
+  <th style="width:70px">Layer</th>
+  <th style="width:70px">Direction</th>
+  <th style="width:140px">Source workload</th>
+  <th>Transaction path</th>
+  <th style="width:140px">Destination workload</th>
+  <th style="width:75px">Risk</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<script>
+const TC = [
+  {id:"TC-CR01-001",grp:"CR-01",layer:"1",dir:"Inbound",risk:"Low",
+   src:"poc-api-client-xyz / poc-https-client-xyz\n(Partner-XYZ inbound segment)",
+   path:"Partner-XYZ VPC → Router-XYZ [IKEv2/ESP] → Internet Zone (IKE anchor) → P2-Zone [tunnel.3 / VR-P2] → Security Policy P2→DMZ → 3PLZ DMZ [mTLS proxy: validates cert against t01 CA trust anchor] → P2-Ent iface → Enterprise P2-Ent segment",
+   dst:"poc-api-target-ent / poc-https-target-ent\n(Enterprise P2-Ent)",
+   note:"Positive path. Partner cert from t01 CA. Proxy returns plain HTTP to enterprise backend."},
+
+  {id:"TC-CR01-002",grp:"CR-01",layer:"1",dir:"Inbound",risk:"Critical",
+   src:"poc-api-client-xyz\n(cert issued by Tenant t01 CA)",
+   path:"Partner-XYZ VPC → Router-XYZ [IKEv2/ESP] → Internet Zone → P2-Zone [tunnel.3 / VR-P2] → Security Policy → 3PLZ DMZ [mTLS proxy: t02 listener receives t01 CA cert → trust validation layer rejects — bad_certificate TLS alert]",
+   dst:"Connection terminated at mTLS proxy (never reaches enterprise backend)",
+   note:"Wrong-tenant CA. Rejection must occur at trust validation, not SNI routing."},
+
+  {id:"TC-CR01-003",grp:"CR-01",layer:"1",dir:"Inbound",risk:"Medium",
+   src:"poc-api-client-xyz\n(expired cert profile)",
+   path:"Partner-XYZ VPC → Router-XYZ [IKEv2/ESP] → P2-Zone [tunnel.3] → 3PLZ DMZ [mTLS proxy: NotAfter in past → certificate_expired TLS alert]",
+   dst:"Connection terminated at mTLS proxy",
+   note:"Expired cert. TLS alert: certificate_expired. Audit log reason code required."},
+
+  {id:"TC-CR01-004",grp:"CR-01",layer:"1",dir:"Inbound",risk:"High",
+   src:"poc-api-client-xyz\n(revoked cert profile)",
+   path:"Revoke cert at CA → wait CRL TTL (≤5 min) → Partner-XYZ → P2-Zone [tunnel.3] → 3PLZ DMZ [mTLS proxy: fetches CRL from CDP → revoked serial found → reject connection]",
+   dst:"Connection terminated at mTLS proxy after CRL refresh",
+   note:"CRL enforcement. CRL TTL ≤5 min. CRL export with revoked serial required as evidence."},
+
+  {id:"TC-CR01-005",grp:"CR-01",layer:"1",dir:"Inbound",risk:"High",
+   src:"poc-api-client-xyz\n(revoked cert via OCSP)",
+   path:"Revoke at CA + OCSP responder → Partner-XYZ → P2-Zone [tunnel.3] → 3PLZ DMZ [mTLS proxy: queries OCSP responder → revoked status after TTL → reject]",
+   dst:"Connection allowed before TTL (cached response); rejected after TTL",
+   note:"OCSP TTL ≤5 min. Two-phase evidence: allowed before TTL, rejected after."},
+
+  {id:"TC-CR01-006",grp:"CR-01",layer:"3",dir:"Inbound",risk:"Critical",
+   src:"poc-api-client-xyz\n(cert with SAN overlapping t02 hostname)",
+   path:"Partner-XYZ → P2-Zone [tunnel.3] → 3PLZ DMZ [mTLS proxy: t02 listener receives t01 cert with SAN matching t02 hostname → trust validation rejects: bad_certificate (not SNI-mismatch)]",
+   dst:"Connection terminated at trust validation layer",
+   note:"Adversarial. SAN abuse. Must fail at trust validation, not at SNI routing."},
+
+  {id:"TC-CR01-007",grp:"CR-01",layer:"3",dir:"Inbound",risk:"Critical",
+   src:"Crafted cert — passes chain validation, fails tenant-scope validation",
+   path:"Malformed cert profile → P2-Zone [tunnel.3] → 3PLZ DMZ [mTLS proxy: shared-root pivot attempt → fail-closed: rejected at trust validation]",
+   dst:"Connection terminated (fail-closed on all malformed cert cases)",
+   note:"Adversarial. Targets platforms chaining all tenant intermediates under one root CA."},
+
+  {id:"TC-CR01-008",grp:"CR-01",layer:"1",dir:"Outbound",risk:"High",
+   src:"poc-api-client-ent\n(Enterprise P1-Ent segment, CVS client cert)",
+   path:"Enterprise P1-Ent segment → P1-Ent iface → 3PLZ DMZ [outbound governed proxy: presents CVS client cert to partner endpoint] → Security Policy DMZ→P1 → VR-P1 → tunnel.1 [IKEv2/ESP] → Partner-ABC outbound segment",
+   dst:"poc-api-target-abc\n(Partner-ABC outbound workload)",
+   note:"CVS-initiated outbound mTLS. Partner endpoint must receive CVS client cert in TLS handshake."},
+
+  {id:"TC-CR01-009",grp:"CR-01",layer:"1",dir:"Outbound",risk:"High",
+   src:"poc-api-client-ent\n(Enterprise P1-Ent segment, no cert)",
+   path:"Enterprise P1-Ent segment → P1-Ent iface → 3PLZ DMZ [outbound governed proxy: no client cert → reject before reaching partner endpoint → audit log]",
+   dst:"Connection terminated at outbound proxy (no traffic reaches Partner-ABC)",
+   note:"Negative outbound mTLS. Rejection before backend; pcap confirms no partner traffic."},
+
+  {id:"TC-CR02-001",grp:"CR-02",layer:"1",dir:"Inbound",risk:"High",
+   src:"poc-ssh-client-abc\n(Partner-ABC inbound segment, PAM-wrapped)",
+   path:"Partner-ABC VPC → Router-A [IKEv2/ESP, tunnel.1] → Internet Zone → P1-Zone [VR-P1] → Security Policy P1→DMZ → 3PLZ DMZ [SSH proxy: TOTP validated, ACL checked, vault://t01/valid-totp read, internal service account injected] → P1-Ent iface → Enterprise P1-Ent segment",
+   dst:"poc-ssh-target-ent\n(Enterprise P1-Ent, SSH TCP/22)",
+   note:"Positive SSH inbound. Enterprise SSH daemon sees proxy source IP only. Partner never sees internal credential."},
+
+  {id:"TC-CR02-002",grp:"CR-02",layer:"1",dir:"Inbound",risk:"Critical",
+   src:"poc-ssh-client-abc\n(wrong TOTP secret)",
+   path:"Partner-ABC → P1-Zone [tunnel.1] → 3PLZ DMZ [SSH proxy: TOTP validation fails → reject at authentication stage → SSH auth failure returned to client]",
+   dst:"Connection terminated at SSH proxy (no backend connection attempt)",
+   note:"TOTP rejection. pcap must show no backend TCP connection. Audit log event required."},
+
+  {id:"TC-CR02-003",grp:"CR-02",layer:"1",dir:"Inbound",risk:"High",
+   src:"poc-ssh-client-abc\n(user in ACL for Host 1, not Host 2)",
+   path:"Partner-ABC → P1-Zone [tunnel.1] → 3PLZ DMZ [SSH proxy: per-host ACL check] → Host 1: ACL pass → vault → P1-Ent → poc-ssh-target-ent\nHost 2 attempt: ACL deny → reject at proxy, no backend connection",
+   dst:"poc-ssh-target-ent (Host 1 — session opened)\nHost 2 — rejected at SSH proxy",
+   note:"ACL enforcement. Two-attempt test. Both outcomes logged. pcap confirms no backend traffic to Host 2."},
+
+  {id:"TC-CR02-004",grp:"CR-02",layer:"1",dir:"Inbound",risk:"Critical",
+   src:"Active inbound SSH session\n(partner-side)",
+   path:"Active: Partner-ABC → P1-Zone [tunnel.1] → 3PLZ DMZ [SSH proxy active session] → P1-Ent → poc-ssh-target-ent\nProbe: from within partner SSH session, attempt env / printenv / sniff commands",
+   dst:"poc-ssh-target-ent\n(internal service account visible to backend only)",
+   note:"Credential concealment. Backend SSH daemon sees internal service account. Partner session has no visibility into that credential."},
+
+  {id:"TC-CR02-005",grp:"CR-02",layer:"1",dir:"Outbound",risk:"High",
+   src:"poc-ssh-client-ent\n(Enterprise P2-Ent segment)",
+   path:"Enterprise P2-Ent segment → P2-Ent iface → 3PLZ DMZ [SSH outbound proxy: vault credential injected for partner service account] → Security Policy DMZ→P2 → VR-P2 → tunnel.3 [IKEv2/ESP] → Partner-XYZ outbound segment",
+   dst:"poc-ssh-target-xyz\n(Partner-XYZ outbound workload, SSH TCP/22)",
+   note:"CVS-initiated outbound SSH. Partner SSH daemon sees only 3PLZ proxy address. CVS never possesses partner credential."},
+
+  {id:"TC-CR02-006",grp:"CR-02",layer:"3",dir:"Inbound",risk:"Critical",
+   src:"poc-ssh-client-abc\n(adversarial passthrough probe)",
+   path:"Partner-ABC → P1-Zone [tunnel.1] → 3PLZ DMZ [SSH proxy: full session termination — backend capture at poc-ssh-target-ent] → P1-Ent → poc-ssh-target-ent",
+   dst:"poc-ssh-target-ent\n(pcap at backend — source IP must be proxy, not partner)",
+   note:"Passthrough prohibition. Backend SSH daemon must see platform-internal source IP. Platform-generated host key in SSH banner."},
+
+  {id:"TC-CR03-001",grp:"CR-03",layer:"1",dir:"Inbound",risk:"High",
+   src:"poc-api-client-xyz / poc-https-client-xyz\n(DNS query: app1.internal.cvs.invalid)",
+   path:"Partner-XYZ → P2-Zone [tunnel.3] → 3PLZ DMZ [per-tenant DNS listener: A-record rewrite → returns t01 SNAT inbound VIP, not real enterprise IP] → DNS response to partner client",
+   dst:"DNS response: SNAT inbound VIP\n(real enterprise IP never in any response)",
+   note:"DNS A-record rewrite. dig output captured as evidence. DNS query log required."},
+
+  {id:"TC-CR03-002",grp:"CR-03",layer:"2",dir:"Inbound",risk:"Critical",
+   src:"DNS query from Tenant A resolver context\n(querying Tenant B internal name)",
+   path:"Tenant A DNS context → 3PLZ DMZ [per-tenant CoreDNS: Tenant B name not in Tenant A zone → NXDOMAIN or empty response] → DNS response to Tenant A client",
+   dst:"NXDOMAIN / empty response\n(Tenant B internal IP never disclosed)",
+   note:"DNS cross-tenant isolation. Five tenants active. DNS audit log required."},
+
+  {id:"TC-CR03-003",grp:"CR-03",layer:"1",dir:"API",risk:"Medium",
+   src:"Harness orchestrator",
+   path:"Vendor API call → enumerate DNS listener objects → confirm 5 distinct listener VIPs across 5 tenants → API state snapshot (tenant-config.json)",
+   dst:"Vendor platform DNS listener config\n(5 independent VIPs confirmed)",
+   note:"Structural verification. No shared listener permitted. API export is the evidence artifact."},
+
+  {id:"TC-CR04-001",grp:"CR-04",layer:"4",dir:"API",risk:"Critical",
+   src:"Harness orchestrator\n(Tenant Onboarding Schema)",
+   path:"Submit Tenant Onboarding Schema via vendor API → observe automated provisioning (zero manual steps) → platform creates: CA, mTLS profile, DNS listener VIP, SSH proxy, vault bindings, routing objects → run EW-01 acceptance suite (16 TCs on t01)",
+   dst:"Vendor platform: t01 ACTIVE\nAPI state snapshot pre/post + acceptance manifest.json",
+   note:"Lifecycle provisioning gate. All 16 acceptance TCs must pass. API export confirms all objects present."},
+
+  {id:"TC-CR04-002",grp:"CR-04",layer:"4",dir:"API",risk:"Critical",
+   src:"Harness orchestrator\n(EW-03 offboarding workflow on t01)",
+   path:"Execute EW-03 offboarding → platform removes: CA, DNS listener, SSH proxy, vault bindings, routing objects, audit forwarders → residual state scan → connectivity verification (formerly-reachable endpoints must be unreachable)",
+   dst:"Vendor platform: all t01 objects removed\npcap of handshake failure + API state snapshot (post-offboard)",
+   note:"Zero residual state. No audit events attributable to t01 after offboard. Also verifies EW-06 Step 7."},
+
+  {id:"TC-CR04-003",grp:"CR-04",layer:"4",dir:"API",risk:"High",
+   src:"Harness orchestrator\n(re-provision t01 after TC-CR04-002)",
+   path:"Re-submit t01 schema via vendor API → automated provisioning → run acceptance suite → verify: fresh CA chain (new serial numbers), new SNAT allocation, no DNS records from prior instantiation",
+   dst:"Vendor platform: t01 ACTIVE (clean)\nAPI state snapshot + CA index export (no legacy serials)",
+   note:"Re-provisioning determinism. No object inheritance from prior t01 instantiation."},
+
+  {id:"TC-CR05-001",grp:"CR-05",layer:"2",dir:"Inbound",risk:"High",
+   src:"All five tenants concurrently:\n10 HTTPS requests/tenant × 5 tenants\n+ 5 concurrent SSH sessions/tenant",
+   path:"t01–t05 partner clients → all VTI tunnels (P1-Zone + P2-Zone) → all proxy paths in 3PLZ DMZ (mTLS + SSH, concurrent) → all enterprise P1-Ent / P2-Ent segments → all enterprise target services",
+   dst:"All enterprise inbound targets\n(poc-api-target-ent, poc-https-target-ent, poc-ssh-target-ent, poc-sftp-target-ent)",
+   note:"Performance baseline manifest: metric + F5 result + CF result + delta + pass/fail per tenant. Zero drops attributable to platform resource contention."},
+
+  {id:"TC-CR05-002",grp:"CR-05",layer:"2",dir:"Inbound",risk:"Critical",
+   src:"All ordered pairs (20) across\n6 isolation vectors, 5 tenants active",
+   path:"Layer 2 matrix: for each ordered pair (ta→tb) across 6 vectors:\n[v1] mTLS CA cross-tenant: ta cert at tb listener → reject\n[v2] SSH credential cross-tenant: ta TOTP at tb proxy → reject\n[v3] DNS cross-disclosure: ta DNS context queries tb name → NXDOMAIN\n[v4] Routing cross-tenant: ta prefix visible in tb VR → absent (VR-P1 / VR-P2 isolation)\n[v5] Audit cross-contamination: ta session events in tb audit log → zero\n[v6] Lifecycle cross-interference: ta offboard disrupts tb → no disruption",
+   dst:"120 execution results (6 × 20 pairs)\nArtifact sets per {run-id}/{vector-id}/{tenant-pair}/",
+   note:"Any single failure fails CR-05. 100% pass rate required."},
+
+  {id:"TC-CR06-001",grp:"CR-06",layer:"1",dir:"Outbound",risk:"High",
+   src:"poc-api-client-ent\n(Enterprise P1-Ent segment)",
+   path:"Declared: Enterprise P1-Ent → P1-Ent iface → 3PLZ DMZ [outbound proxy: destination in declared endpoint list → permit + TLS inspection active] → VR-P1 → tunnel.1 → Partner-ABC → poc-api-target-abc (200 OK)\nUndeclared: Enterprise → outbound proxy [destination NOT in declared list → block → deny event logged]",
+   dst:"poc-api-target-abc (declared — success)\nUndeclared target (blocked — deny logged, no partner traffic)",
+   note:"Allow-list enforcement. pcap confirms TLS termination at platform for declared path. Audit log for both outcomes."},
+
+  {id:"TC-CR06-002",grp:"CR-06",layer:"1",dir:"Outbound",risk:"Medium",
+   src:"poc-api-client-ent\n(Enterprise P1-Ent, name-initiated egress)",
+   path:"Enterprise P1-Ent segment → DNS query for partner FQDN → 3PLZ DMZ [per-tenant CoreDNS forwarding context: outbound DNS query forwarded through tenant resolver context] → outbound proxy → VR-P1 → tunnel.1 → Partner-ABC",
+   dst:"poc-api-target-abc\n(DNS resolved via per-tenant CoreDNS)",
+   note:"DNS query source IP must equal tenant resolver VIP in pcap. DNS query log required."},
+
+  {id:"TC-CR06-003",grp:"CR-06",layer:"3",dir:"Outbound",risk:"Critical",
+   src:"Harness attacker client or\nAPI manipulation attempt",
+   path:"Attempt 1 (API): modify outbound TLS policy to passthrough via vendor API → API rejects configuration\nAttempt 2 (wire): craft ClientHello triggering SNI-based passthrough → platform flags + blocks session",
+   dst:"Vendor API (rejects passthrough config)\nor platform blocks crafted session",
+   note:"Adversarial. TLS inspection mandatory on outbound path. Passthrough configuration must be rejected or flagged/blocked."},
+
+  {id:"TC-CR07-001",grp:"CR-07",layer:"I-Plane",dir:"Inbound",risk:"High",
+   src:"poc-api-client-xyz (Tenant t01)\n(mTLS inbound via P2-Zone)",
+   path:"Partner-XYZ → P2-Zone [tunnel.3] → Vendor edge [decrypts mTLS session → per-tenant steering primitive → steers to t01 vsys on inspection appliance] → 3PLZ DMZ [inspection appliance t01 vsys receives plaintext payload] → return to forwarding path → P2-Ent → Enterprise",
+   dst:"poc-api-target-ent (Enterprise P2-Ent)\nInspection appliance: t01 vsys inspection event logged",
+   note:"Harness test I-01. Appliance receives plaintext (not encrypted tunnel). Vendor-edge audit shows steering action."},
+
+  {id:"TC-CR07-002",grp:"CR-07",layer:"I-Plane",dir:"Outbound",risk:"High",
+   src:"poc-api-client-ent\n(Enterprise P1-Ent outbound egress, Tenant t01)",
+   path:"Enterprise P1-Ent → P1-Ent iface → 3PLZ DMZ → Vendor edge [decrypts outbound TLS → per-tenant steering → t01 vsys on inspection appliance → directionality: egress verdict logged] → VR-P1 → tunnel.1 → Partner-ABC",
+   dst:"poc-api-target-abc (Partner-ABC)\nInspection appliance: t01 vsys egress inspection event",
+   note:"Harness test I-02. Appliance records correct directionality (egress). Vendor-edge audit shows outbound steering."},
+
+  {id:"TC-CR07-003",grp:"CR-07",layer:"I-Plane",dir:"Inbound",risk:"Critical",
+   src:"poc-api-client-xyz (Tenant t01 traffic only)\nt02 vsys separately monitored",
+   path:"t01 traffic: Partner-XYZ → P2-Zone → vendor edge [steers to t01 vsys] → 3PLZ DMZ [t01 vsys processes] → Enterprise\nCheck t02 vsys: confirm zero t01 events appear in t02 vsys logs",
+   dst:"t01 vsys: t01 events present\nt02 vsys: zero t01 events (isolation confirmed)",
+   note:"Harness test I-03. Cross-tenant observation at inspection layer = CR-01 + CR-07 dual failure. Both vsys logs required as evidence."},
+
+  {id:"TC-CR07-004",grp:"CR-07",layer:"I-Plane",dir:"Outbound",risk:"High",
+   src:"poc-api-client-ent\n(destination on t01 decrypt-exclusion list)",
+   path:"Enterprise P1-Ent → P1-Ent iface → Vendor edge [destination matches decrypt-exclusion list → exclusion-match action recorded → NO steering to inspection appliance] → VR-P1 → tunnel.1 → excluded simulator",
+   dst:"Excluded simulator (Partner-ABC)\nInspection appliance t01 vsys: NO inspection event for this flow",
+   note:"Harness test I-04. Evidence: vendor-edge audit (exclusion-match), appliance vsys log (absent entry), pcap (pre/post decrypt paths)."},
+
+  {id:"TC-CR07-005",grp:"CR-07",layer:"I-Plane",dir:"Inbound",risk:"Critical",
+   src:"poc-api-client-xyz (Tenant t01, fail-closed)\npoc-api-client-xyz (Tenant t02, active/unaffected)",
+   path:"t01 (fail-closed): Partner-XYZ → P2-Zone → vendor edge → inspection appliance OFFLINE → fail-closed: session denied → audit event (fail_closed reason code)\nt02 (active): separate traffic path → inspection appliance offline has no effect on t02",
+   dst:"t01: session denied (fail-closed enforced)\nt02: sessions continue unaffected",
+   note:"Harness test I-06. Admin shuts inspection appliance. t01 = fail-closed configured. t02 = must be unaffected. Dual audit log evidence."},
+
+  {id:"TC-CR07-006",grp:"CR-07",layer:"I-Plane",dir:"Inbound",risk:"High",
+   src:"poc-ssh-client-abc (Tenant t01)\n(inbound SSH + SFTP + port-forward attempt)",
+   path:"Partner-ABC → P1-Zone [tunnel.1] → Vendor edge [SSH session steered to t01 vsys on inspection appliance] → 3PLZ DMZ [SSH proxy active + inspection plane receives decrypted SSH session content] → P1-Ent → poc-ssh-target-ent",
+   dst:"poc-ssh-target-ent (Enterprise P1-Ent)\nInspection appliance t01 vsys: shell transcripts + SFTP file metadata logged\nPort-forward attempt: blocked",
+   note:"Harness test I-08. SSH commands + SFTP file transfer must appear in t01 vsys session log."},
+
+  {id:"TC-CR07-007",grp:"CR-07",layer:"I-Plane",dir:"Inbound",risk:"High",
+   src:"100 randomly selected sessions\nfrom I-01 through I-08",
+   path:"Post-execution: automated join on correlation_id field → vendor-edge audit records ↔ inspection appliance vsys records → match rate computed → mismatches itemized",
+   dst:"Correlation join report (JSON)\nSIEM query output\nMatch rate ≥ 99% required",
+   note:"Harness test I-09. Per-session correlation_id field is the join key. < 99% match rate = CR-07.7 failure."},
+
+  {id:"TC-CR07-008",grp:"CR-07",layer:"I-Plane",dir:"API",risk:"Critical",
+   src:"Harness engineer\n(inspection appliance config export)",
+   path:"Export inspection appliance full configuration → text search for private key material → attempt standalone TLS termination from appliance management interface",
+   dst:"Appliance config export: no TLS private key material found\nStandalone termination attempt: fails",
+   note:"Key custody. TLS session keys remain at 3PLZ proxy. Appliance never receives key material."},
+
+  {id:"TC-CR07-009",grp:"CR-07",layer:"I-Plane",dir:"API",risk:"High",
+   src:"Harness orchestrator\n(EW-03 + EW-06 Step 7 on Tenant t03)",
+   path:"Execute EW-03 (tenant offboard) + EW-06 Step 7 (inspection container removal) for t03 → inspection device API export → confirm: t03 vsys removed, all inspection objects absent, log forwarding terminated",
+   dst:"Inspection device: zero t03 vsys objects\nEW-03 residual scan: clean",
+   note:"Harness test I-11. Post-offboard API export is the evidence artifact."},
+
+  // CR-01 through CR-07 done. Now IPSec.
+
+  {id:"TC-IPSec-VTI-001",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"High",
+   src:"Cisco Cat 8000v (replaces EOL CSR 1000v)\n(cert auth, harness peer)",
+   path:"CSR 1000v [IKEv2 SA_INIT: AES-256-CBC + SHA-384 + DH Group 19] → UDP/500 → Internet Zone [IKE anchor] → IKE_AUTH [cert: POC-PEER-CA] → IKE SA ESTABLISHED → IPSec SA: ESP AES-256-GCM + PFS Group 19 → tunnel.1 (P1-Zone) UP → VR-P1 route installed (192.0.2.0/24) → prefix filter: undeclared prefix dropped",
+   dst:"Vendor edge: tunnel.1 in P1-Zone UP\nRoute table: declared prefix present, undeclared absent",
+   note:"Pre-flight gate for all CR tests. Config: crypto ikev2 profile POC-IKE-PROF + interface Tunnel1 tunnel mode ipsec ipv4."},
+
+  {id:"TC-IPSec-VTI-002",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"High",
+   src:"Cisco CSR 1000v\n(permanent PSK, vault://ipsec-psk/t01/csr-peer)",
+   path:"CSR 1000v [IKEv2 PSK keyring: peer scoped to vendor-edge-public-ip] → UDP/500 → Internet Zone → IKE SA ESTABLISHED with PSK auth → IPSec SA → tunnel.1 UP\nNegative: wrong-PSK attempt → AUTHENTICATION_FAILED",
+   dst:"Vendor edge: tunnel.1 UP with PSK auth\nWrong-PSK: AUTHENTICATION_FAILED returned",
+   note:"PSK must be peer-scoped (no wildcard entry). Vault audit log confirms one PSK read. Config: crypto ikev2 keyring POC-PSK-KEYRING."},
+
+  {id:"TC-IPSec-VTI-003",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"Medium",
+   src:"Cisco CSR 1000v\n(Marketplace AMI: Group 19 not supported)",
+   path:"Pre-flight: emit warning CIPHER_FALLBACK_GROUP14_CSR_PEER (not FAIL) → CSR 1000v [IKEv2: AES-256-CBC + SHA-384 + DH Group 14] → Internet Zone → IKE SA ESTABLISHED with Group 14 → harness proceeds (warning documented)",
+   dst:"Vendor edge: tunnel.1 UP with Group 14\nPre-flight manifest: CIPHER_FALLBACK_GROUP14_CSR_PEER warning present",
+   note:"Documented compatibility exception. Pre-flight WARN (not FAIL). Group 14 flagged in evidence bundle."},
+
+  {id:"TC-IPSec-VTI-004",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"High",
+   src:"Palo Alto VM-Series (PAN-OS)\n(cert auth: IKE Gateway + IPSec Tunnel objects)",
+   path:"PAN-OS [IKE Gateway: IKEv2 + cert auth + AES-256-GCM + SHA-384 + DH Group 19] → UDP/500 → Internet Zone → IKE SA ESTABLISHED → IPSec SA: ESP AES-256-GCM + PFS Group 19 → tunnel.1 (P1-Zone) UP",
+   dst:"Vendor edge: tunnel.1 UP\nshow vpn ike-sa detail + show vpn ipsec-sa + show interface tunnel.1",
+   note:"Config: set network ike gateway POC-GW version ikev2 + POC-IKE-CRYPTO (aes-256-gcm + sha384 + group19)."},
+
+  {id:"TC-IPSec-VTI-005",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"High",
+   src:"Palo Alto VM-Series (PAN-OS)\n(permanent PSK, vault://ipsec-psk/t01/pan-peer)",
+   path:"PAN-OS [IKE Gateway: peer-id type=ipaddr, no wildcard peer] → IKE SA ESTABLISHED with PSK → IPSec SA UP\nNegative: wrong-PSK → AUTHENTICATION_FAILED",
+   dst:"Vendor edge: IKE SA with PSK + peer-id type=ipaddr confirmed\nIKE Gateway config export: peer-id type=ipaddr",
+   note:"Wildcard peer absent. Wrong-PSK rejection pcap required."},
+
+  {id:"TC-IPSec-VTI-006",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"High",
+   src:"Arista CloudEOS Router\n(cert auth — CloudEOS Router variant confirmed, not vanilla vEOS)",
+   path:"Pre-flight: confirm CloudEOS Router variant (show version) → Arista [IKEv2 + cert auth + AES-256-GCM + SHA-384 + Group 19] → Internet Zone → IKE SA ESTABLISHED → Tunnel1 UP → route installed",
+   dst:"Vendor edge: Tunnel1 UP\nshow ipsec connection detail + show interface Tunnel1 + show ip route",
+   note:"CloudEOS Router variant (not vEOS) is a known pitfall. Pre-flight must confirm AMI variant before proceeding."},
+
+  {id:"TC-IPSec-VTI-007",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"High",
+   src:"Arista CloudEOS Router\n(permanent PSK, vault://ipsec-psk/t01/arista-peer)",
+   path:"CloudEOS Router [IKEv2 PSK: peer identity scoped to IP] → Internet Zone → IKE SA ESTABLISHED with PSK → Tunnel1 UP\nNegative: wrong-PSK → AUTHENTICATION_FAILED",
+   dst:"Vendor edge: tunnel UP + peer-specific scoping\nWrong-PSK rejection: pcap (AUTHENTICATION_FAILED)",
+   note:"Peer-specific PSK scoping. Vault audit record required."},
+
+  {id:"TC-IPSec-VTI-008",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"Medium",
+   src:"strongSwan 5.9.x (Ubuntu 22.04)\n(cert auth, vti_interface=vti0 — reference impl)",
+   path:"swanctl --load-all && swanctl --initiate --child POC-CHILD → IKE_SA_INIT [aes256gcm128 + prfsha384 + ecp256] → IKE_AUTH [cert] → IKE_SA ESTABLISHED → CHILD_SA INSTALLED → vti0 interface UP → traffic flows on vti0",
+   dst:"Vendor edge: CHILD_SA INSTALLED + vti0 UP\nswanctl --list-sas + ip xfrm state + ip link show vti0",
+   note:"Reference IKEv2 implementation. Config: swanctl.conf proposals=aes256gcm128-prfsha384-ecp256! with vti_interface=vti0."},
+
+  {id:"TC-IPSec-VTI-009",grp:"IPSec-VTI",layer:"Transport",dir:"Control",risk:"High",
+   src:"strongSwan\n(permanent PSK, vault://ipsec-psk/t01/swanctl-peer)",
+   path:"secrets.conf: site-specific IKE entry (id=<vendor-edge-ip>, NOT %any) → swanctl --initiate PSK child → IKE_SA ESTABLISHED with PSK → vti0 UP\nNegative: wrong-PSK → AUTHENTICATION_FAILED",
+   dst:"Vendor edge: vti0 UP with site-specific PSK\nsecrets.conf export: no %any entry",
+   note:"Wildcard PSK (%any) explicitly prohibited. Config: ike-poc-psk { id = <vendor-edge-ip> }."},
+
+  {id:"TC-IPSec-CM-001",grp:"IPSec-CM",layer:"Transport",dir:"Control",risk:"High",
+   src:"strongSwan\n(policy-based, kernel XFRM — NO vti_interface)",
+   path:"swanctl.conf WITHOUT vti_interface → swanctl --initiate POC-POLICY-CHILD → XFRM SAs installed (ip xfrm state) → XFRM policies installed (ip xfrm policy, inbound + outbound) → NO vti0 interface → traffic within selector encrypted inline",
+   dst:"Vendor edge: XFRM SAs and policies installed\nip xfrm state + policy (present) + ip link (no vti0)\npcap: ESP for in-selector traffic",
+   note:"Policy-based legacy partner interop. XFRM security policies without VTI. Traffic matched by local_ts/remote_ts selectors."},
+
+  {id:"TC-IPSec-CM-002",grp:"IPSec-CM",layer:"Transport",dir:"Control",risk:"High",
+   src:"strongSwan\n(policy-based + permanent PSK — no vti_interface)",
+   path:"PSK from vault → swanctl PSK policy-based child → XFRM SAs + policies installed → NO vti0 → traffic within selector confirmed\nNegative: wrong-PSK → AUTHENTICATION_FAILED",
+   dst:"Vendor edge: XFRM SAs + policies (no VTI)\nWrong-PSK rejection + vault audit log",
+   note:"Policy-based + PSK. Selector enforcement and wrong-PSK rejection required."},
+
+  {id:"TC-IPSec-CM-003",grp:"IPSec-CM",layer:"Transport",dir:"Control",risk:"High",
+   src:"Cisco CSR / Cat 8000v\n(native crypto-map, GigabitEthernet1, IKEv2 cert)",
+   path:"Trigger interesting traffic matching ACL ACL-POC-ENCRYPT (src: 192.0.2.0/24, dst: 10.0.0.0/8) → GigabitEthernet1 [crypto map POC-CMAP] → IKEv2 exchange → IKE SA + IPSec SA established (NOT VTI) → ACL-matched traffic encrypted → non-ACL traffic transits cleartext",
+   dst:"Vendor edge: IKE SA + IPSec SA under crypto-map\nshow crypto ipsec sa: encaps/decaps counters increment",
+   note:"Policy-based via crypto-map. Only ACL-matched traffic encrypted. Config: crypto map POC-CMAP 10 ipsec-isakmp + match address ACL-POC-ENCRYPT."},
+
+  {id:"TC-IPSec-CM-004",grp:"IPSec-CM",layer:"Transport",dir:"Control",risk:"High",
+   src:"Cisco CSR / Cat 8000v\n(native crypto-map + permanent PSK, vault://ipsec-psk/t01/csr-cm-peer)",
+   path:"PSK keyring substituted for cert auth → trigger interesting traffic → IKE SA with PSK auth + ACL selector enforced\nNegative: wrong-PSK → AUTHENTICATION_FAILED",
+   dst:"Vendor edge: IKE SA under crypto-map with PSK\nKeyring config export: peer-scoped entry\npcap: AUTHENTICATION_FAILED for wrong-PSK",
+   note:"Same crypto-map topology as CM-003 with PSK auth. Keyring entry must be peer-scoped."},
+
+  {id:"TC-IPSec-XFORM-001",grp:"IPSec-XFORM",layer:"Transport",dir:"Control",risk:"Critical",
+   src:"All four VTI peers simultaneously:\nCisco IOS / PAN-OS / Arista CloudEOS / strongSwan",
+   path:"Capture IKEv2 SA_INIT + IKE_AUTH exchanges on all 4 peers → Wireshark decode SA payload → verify selected proposal per peer:\nCisco IOS: AES-256-CBC + SHA-384 + Group 19 (Group 14 flagged)\nPAN-OS: AES-256-GCM + SHA-384 + Group 19\nArista: AES-256-GCM + SHA-384 + Group 19\nstrongSwan: AES-256-GCM-128 + SHA-384 + ECP-256",
+   dst:"Compliance matrix table (4 peers)\nWireshark IKEv2 SA_INIT decode: SA payload with selected proposal for all 4 peers",
+   note:"Critical crypto compliance gate. References NIST SP 800-77r1 + CNSA 1.0. Compliance matrix in evidence bundle."},
+
+  {id:"TC-IPSec-XFORM-002",grp:"IPSec-XFORM",layer:"Transport",dir:"Control",risk:"Critical",
+   src:"All four VTI + crypto-map tunnels\nstrongSwan negative test: NULL encryption / no-PFS proposals",
+   path:"Record active IPSec SA transform from CLI (all peers) → confirm AES-256-GCM + PFS Group 19 for each → strongSwan negative: attempt NULL encryption proposal → NO_PROPOSAL_CHOSEN → attempt no-PFS proposal → NO_PROPOSAL_CHOSEN",
+   dst:"All IPSec SAs: AES-256-GCM + PFS Group 19 confirmed\nNULL/no-PFS: NO_PROPOSAL_CHOSEN from vendor edge",
+   note:"Data-plane encryption + PFS non-negotiable. pcap of SA rekey + vendor edge reject notification required."},
+
+  {id:"TC-IPSec-XFORM-003",grp:"IPSec-XFORM",layer:"Transport",dir:"Control",risk:"Critical",
+   src:"strongSwan\n(6 separate negative test proposals)",
+   path:"For each weak algorithm (run separately):\nTest 1 DES: proposals=des-sha1-modp768! → NO_PROPOSAL_CHOSEN\nTest 2 3DES: proposals=3des-sha1-modp1024! → NO_PROPOSAL_CHOSEN\nTest 3 MD5: proposals=aes256-md5-modp1024! → NO_PROPOSAL_CHOSEN\nTest 4 DH Grp 1: proposals=aes256gcm128-prfsha384-modp768! → NO_PROPOSAL_CHOSEN\nTest 5 DH Grp 2: proposals=aes256gcm128-prfsha384-modp1024! → NO_PROPOSAL_CHOSEN\nTest 6 DH Grp 5: proposals=aes256gcm128-prfsha384-modp1536! → NO_PROPOSAL_CHOSEN",
+   dst:"Vendor edge: 6 × NO_PROPOSAL_CHOSEN\nWireshark decode: IKEv2 NOTIFY(NO_PROPOSAL_CHOSEN) for each weak algorithm (6 pcaps)",
+   note:"Cipher hygiene enforcement. References NIST SP 800-131Ar2 + CNSA 1.0. Six separate pcap evidence files."},
+
+  {id:"TC-IPSec-LIFE-001",grp:"IPSec-LIFE",layer:"Transport",dir:"Control",risk:"High",
+   src:"strongSwan\n(VTI spin-up, declared: 192.0.2.0/24, undeclared: 203.0.113.0/24)",
+   path:"swanctl --initiate → vti0 UP → IKEv2 complete → IPSec SA installed → VR route table: 192.0.2.0/24 present via vti0 → 203.0.113.0/24 absent → send traffic from 203.0.113.0/24: dropped at vendor edge prefix filter",
+   dst:"Vendor edge route table: declared prefix present, undeclared absent\npcap: undeclared traffic dropped",
+   note:"Transport correctness gate for all CR tests. ip link + ip route + vendor API route table export."},
+
+  {id:"TC-IPSec-LIFE-002",grp:"IPSec-LIFE",layer:"Transport",dir:"Control",risk:"High",
+   src:"strongSwan\n(VTI active → administratively torn down)",
+   path:"Pre-teardown: confirm vti0 UP + route present + ip xfrm state populated → Tear down tunnel (swanctl --terminate) → Confirm: vti0 DOWN → ip xfrm state empty → ip xfrm policy empty → route withdrawn from vendor edge routing table",
+   dst:"Post-teardown: vti0 DOWN + all XFRM state empty + route absent in vendor edge",
+   note:"Zero residual state. ip xfrm state (empty) + ip xfrm policy (empty) + ip route (route absent) + vendor API export."},
+
+  {id:"TC-IPSec-LIFE-003",grp:"IPSec-LIFE",layer:"Transport",dir:"Control",risk:"High",
+   src:"strongSwan\n(DPD: 30s interval, 120s timeout, dpd_action=restart)",
+   path:"Confirm DPD INFORMATIONAL exchanges at 30s intervals (pcap) → Block IKE traffic to simulate peer failure → Wait DPD timeout (120s) → IKE SA cleared → Restore connectivity → New IKE_SA_INIT initiated → tunnel re-established (no operator intervention)",
+   dst:"Vendor edge: IKE SA cleared at DPD timeout\nNew IKE_SA_INIT on recovery → tunnel re-established\npcap: DPD INFORMATIONAL exchanges then IKE_SA_INIT",
+   note:"Operational resilience. Also validates Partner-ABC active/passive failover behavior (Router-A → Router-B transition)."},
+
+  {id:"TC-IPSec-LIFE-004",grp:"IPSec-LIFE",layer:"Transport",dir:"Control",risk:"High",
+   src:"strongSwan\n(shortened lifetimes: IKE SA 5m, IPSec SA 2m)\ncontinuous ping to CVS-side backend active",
+   path:"Continuous ping running → Wait IPSec SA lifetime (2 min) → pcap: CREATE_CHILD_SA with KE payload (new key material) → confirm no ping drops → Wait IKE SA lifetime (5 min) → pcap: full IKE_SA_INIT rekey → confirm no ping drops → new SPI in ESP headers",
+   dst:"Vendor edge: SA rekey transparent to data plane\npcap: CREATE_CHILD_SA + IKE_SA_INIT rekey\nping log: zero drops throughout",
+   note:"SA lifetimes shortened for test only (production: IKE SA 8h / IPSec SA 1h). New SPI in ESP headers confirms fresh key material."},
+
+  {id:"TC-IPSec-LIFE-005",grp:"IPSec-LIFE",layer:"Transport",dir:"Control",risk:"Critical",
+   src:"strongSwan\n(active VTI cert-auth tunnel — peer cert then revoked)",
+   path:"Active VTI tunnel confirmed → Revoke peer cert at CA → Update CRL → Notify OCSP responder → Wait CRL TTL → Attempt IKE re-establishment → Vendor edge: AUTHENTICATION_FAILED (revoked cert)\n→ Issue new peer cert → Re-attempt IKE → tunnel re-established",
+   dst:"After CRL refresh: IKE re-establishment blocked (AUTHENTICATION_FAILED)\nAfter new cert: tunnel re-established\nEvidence: CRL export (revoked serial) + two IKE_AUTH pcaps",
+   note:"PKI lifecycle control for tunnel security. Parallel to TC-CR01-004. Harness §5.4.2 OCSP+CRL."},
+
+  {id:"TC-SVCINFRA-CERT-001",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user / machine user\n(user ID registered in tenant t01 directory)",
+   path:"HTTPS POST userid → Cert Delivery Web Service [directory lookup: userid exists, active, tenant-scoped] → Email OTP Service [dispatch time-bounded OTP to registered email address] → Partner email inbox → HTTPS POST userid + OTP → Cert Delivery Web Service [OTP validated: time-bounded, single-use] → Tenant t01 CA [generate key pair + sign cert: SAN=userid email, EKU=clientAuth, issuer=tenant intermediate CA] → cert + private key returned to partner",
+   dst:"Partner: signed cert + private key received\nAudit event: cert_issued logged\nEmail delivery log: OTP dispatched to correct address",
+   note:"Positive path. Platform-generated cert. Gate for all CR-01 tests — cert profile must be correct before mTLS tests run."},
+
+  {id:"TC-SVCINFRA-CERT-002",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user / machine user\n(pre-generated CSR: correct key size, SAN=userid email, EKU=clientAuth)",
+   path:"Generate CSR (min 2048-bit RSA or P-256 ECDSA, SAN=userid, EKU=clientAuth) → HTTPS POST userid → Cert Delivery Web Service [directory lookup] → Email OTP Service [dispatch OTP to registered email] → Partner email inbox → HTTPS POST userid + OTP + CSR → Cert Delivery Web Service [OTP validated + CSR profile validated: key size, SAN matches userid, key usage correct] → Tenant t01 CA [sign CSR] → signed cert returned (private key NOT returned — held by requester)",
+   dst:"Partner: signed cert received (no private key in response)\nCert: SAN=userid, issuer=tenant t01 intermediate CA, EKU=clientAuth\nAudit event: cert_issued (CSR path)",
+   note:"CSR upload path. Private key never transits the cert delivery service. openssl x509 -text decode required as evidence."},
+
+  {id:"TC-SVCINFRA-CERT-003",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"Critical",
+   src:"Partner user\n(valid userid, wrong OTP submitted)",
+   path:"HTTPS POST userid → Cert Delivery Web Service [directory lookup: valid] → Email OTP Service [OTP dispatched] → HTTPS POST userid + WRONG OTP → Cert Delivery Web Service [OTP validation fails] → 401/403 error returned — NO cert generated, NO key pair generated",
+   dst:"Error response: OTP validation failed\nNo cert operation performed\nAudit event: otp_validation_failed\nNo key material generated or stored",
+   note:"Wrong OTP must terminate the transaction before any CA operation. Audit log must confirm no cert_issued event."},
+
+  {id:"TC-SVCINFRA-CERT-004",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user\n(valid userid, OTP allowed to expire before submission)",
+   path:"HTTPS POST userid → Cert Delivery Web Service → Email OTP Service [OTP dispatched with TTL=N minutes] → WAIT: TTL expires → HTTPS POST userid + expired OTP → Cert Delivery Web Service [OTP TTL check fails] → error returned: OTP expired",
+   dst:"Error response: OTP expired\nNo cert generated\nAudit event: otp_expired",
+   note:"OTP TTL must be enforced. TTL value documented and consistent with cert delivery session window. Two-phase: confirm OTP accepted before TTL, rejected after."},
+
+  {id:"TC-SVCINFRA-CERT-005",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Harness client\n(unregistered userid submitted — not in tenant directory)",
+   path:"HTTPS POST unregistered-userid → Cert Delivery Web Service [directory lookup: userid NOT found] → generic error returned — response MUST be indistinguishable from wrong-OTP error → NO OTP dispatched → NO cert operation",
+   dst:"Generic error response (no user enumeration signal)\nNo OTP email sent\nNo cert generated\nAudit event: lookup_failed (internal only — not exposed in response)",
+   note:"User enumeration prevention. Response body and timing must not distinguish 'userid not found' from 'wrong OTP'. Prevents directory harvesting."},
+
+  {id:"TC-SVCINFRA-CERT-006",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user\n(replays previously consumed OTP within TTL window)",
+   path:"HTTPS POST userid → OTP dispatched → HTTPS POST userid + OTP (first use: success, cert received) → HTTPS POST userid + SAME OTP again (reuse attempt within TTL) → Cert Delivery Web Service [OTP state: CONSUMED] → error returned: OTP already used",
+   dst:"First use: cert issued\nSecond use: rejected — OTP consumed\nAudit event: otp_replay_rejected",
+   note:"OTP must be single-use. Consumed on first successful validation even if TTL has not expired."},
+
+  {id:"TC-SVCINFRA-CERT-007",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"Medium",
+   src:"Harness client\n(rapid repeated OTP requests for same userid)",
+   path:"HTTPS POST userid (request 1) → OTP dispatched → HTTPS POST userid (request 2, within rate-limit window) → OTP dispatched or throttled → ... repeat to configured limit → Cert Delivery Web Service [rate limiter: per-userid request count exceeded] → 429 Too Many Requests returned",
+   dst:"Requests within limit: OTP dispatched\nRequests exceeding limit: 429 returned\nAudit event: rate_limit_triggered",
+   note:"Rate limit prevents OTP brute force via repeated request/guess cycles. Limit value and window documented as evidence."},
+
+  {id:"TC-SVCINFRA-CERT-008",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user\n(CSR with undersized RSA key: 1024-bit)",
+   path:"Generate weak CSR (1024-bit RSA key) → HTTPS POST userid → OTP dispatched → HTTPS POST userid + OTP + weak CSR → Cert Delivery Web Service [CSR profile validation: key size below minimum] → error returned: insufficient key size",
+   dst:"CSR rejected — key size below minimum accepted threshold\nAudit event: csr_rejected (key_size)\nNo cert signed",
+   note:"Minimum key size enforced (2048-bit RSA or P-256 ECDSA). Prevents weak key material from entering the tenant PKI."},
+
+  {id:"TC-SVCINFRA-CERT-009",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"Critical",
+   src:"Partner user\n(CSR with SAN set to different email — not the authenticated userid)",
+   path:"Generate CSR with SAN=attacker@other-tenant.com (does NOT match authenticated userid) → HTTPS POST userid → OTP dispatched and validated → HTTPS POST userid + OTP + mismatched-SAN CSR → Cert Delivery Web Service [CSR profile validation: SAN ≠ authenticated userid] → CSR rejected",
+   dst:"CSR rejected: SAN must match authenticated userid\nAudit event: csr_rejected (san_mismatch)\nNo cert signed",
+   note:"Critical identity binding control. A cert with SAN ≠ authenticated userid would allow impersonation in mTLS. Rejection must occur post-OTP-validation, not silently."},
+
+  {id:"TC-SVCINFRA-CERT-010",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user\n(CSR with key usage = serverAuth only, no clientAuth EKU)",
+   path:"Generate CSR with EKU=serverAuth only (omitting clientAuth) → HTTPS POST userid → OTP validated → HTTPS POST userid + OTP + wrong-EKU CSR → Cert Delivery Web Service [CSR profile validation: EKU missing clientAuth] → rejected OR cert issued with platform-enforced clientAuth EKU",
+   dst:"Option A (reject): CSR rejected — EKU profile non-compliant\nOption B (enforce): cert issued with clientAuth EKU regardless of CSR request\nAudit event records outcome\nExpected behaviour documented as vendor commitment",
+   note:"Platform must either reject or enforce correct EKU. A cert without clientAuth EKU will fail mTLS handshake at the proxy — this test surfaces the failure mode before CR-01 runs."},
+
+  {id:"TC-SVCINFRA-CERT-011",grp:"SVCINFRA-CERT",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Harness engineer\n(certs from TC-SVCINFRA-CERT-001 and TC-SVCINFRA-CERT-002)",
+   path:"openssl x509 -text -noout on cert from platform-gen path → verify: Subject=userid email, SAN=userid email, Issuer=tenant t01 intermediate CA (NOT shared root), EKU=clientAuth present, validity period within configured window, serial unique across tenant\nopenssl x509 -text -noout on cert from CSR path → verify same fields",
+   dst:"Both certs: all profile fields confirmed correct\nIssuing CA: tenant t01 intermediate (not shared platform root)\nNo extra SANs beyond userid email\nSerial numbers unique",
+   note:"Profile validation gate. Must pass before TC-CR01-001 runs. Failure here explains CR-01 results that would otherwise be ambiguous about platform vs cert profile."},
+
+  {id:"TC-SVCINFRA-OTP-001",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user\n(cert delivery OTP request — email channel)",
+   path:"HTTPS POST userid to cert delivery endpoint → Cert Delivery Web Service [triggers email OTP dispatch] → Email OTP Service [generates time-bounded OTP, dispatches to registered email address for userid] → Partner email inbox: OTP received → verify: delivered to registered address only, delivered within configured timeout window",
+   dst:"OTP email: received at registered address\nDelivery log: confirms correct destination address\nNot delivered to any other address\nDelivery latency within configured window",
+   note:"Email delivery channel verification for cert path. Evidence: email delivery service log + received email headers confirming destination address."},
+
+  {id:"TC-SVCINFRA-OTP-002",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user\n(email OTP — TTL enforcement test)",
+   path:"HTTPS POST userid → Email OTP Service [OTP dispatched with TTL=N minutes] → receive OTP → test before TTL: submit OTP → accepted → WAIT: TTL expires → test after TTL: submit same OTP → Cert Delivery Web Service [OTP TTL check: EXPIRED] → rejected",
+   dst:"Pre-TTL submission: OTP accepted\nPost-TTL submission: OTP rejected (expired)\nTTL boundary documented and consistent with cert session window",
+   note:"Email channel TTL enforcement. Two submissions required as evidence — accepted before, rejected after."},
+
+  {id:"TC-SVCINFRA-OTP-003",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"Critical",
+   src:"Partner user\n(email OTP — single-use enforcement)",
+   path:"HTTPS POST userid → Email OTP dispatched → HTTPS POST userid + OTP (first use, within TTL) → cert issued → HTTPS POST userid + SAME OTP (second use, still within TTL) → Cert Delivery Web Service [OTP state: CONSUMED] → rejected",
+   dst:"First use: cert issued\nSecond use (within TTL): rejected — OTP consumed on first validation\nAudit event: otp_replay_rejected",
+   note:"Critical. OTP must be single-use even within TTL window. An OTP reusable within its TTL is effectively a static password for the delivery session."},
+
+  {id:"TC-SVCINFRA-OTP-004",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user / machine user\n(SSH/SFTP OTP request — text/SMS channel via CURL)",
+   path:"curl -X POST [otp-service]/request -d userid=user@domain → OTP Service [directory lookup: userid active in tenant] → SMS/text dispatch [OTP delivered to registered phone number for userid] → Partner phone: OTP received as text message → verify: delivered to registered phone only, within configured timeout",
+   dst:"OTP text: received on registered phone\nDelivery log: correct destination phone number\nNot delivered to any other number\nDelivery latency within SSH session establishment window",
+   note:"Text/SMS channel for SSH proxy path. Separate delivery channel from email (cert path). Machine user proxy curl flow must work identically to human user."},
+
+  {id:"TC-SVCINFRA-OTP-005",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Partner user\n(text/SMS OTP — TTL enforcement)",
+   path:"curl POST userid → SMS OTP dispatched with TTL=N minutes → OTP received → test before TTL: present userid + OTP to SSH proxy → accepted → WAIT: TTL expires → test after TTL: present same OTP to SSH proxy → SSH proxy [OTP TTL check: EXPIRED] → authentication rejected",
+   dst:"Pre-TTL: SSH proxy accepts userid + OTP → session proceeds to TOTP\nPost-TTL: SSH proxy rejects OTP — expired\nTTL boundary documented",
+   note:"SMS channel TTL enforcement. TTL must be consistent with SSH session establishment window — long enough to be practical, short enough to be secure."},
+
+  {id:"TC-SVCINFRA-OTP-006",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"Critical",
+   src:"Partner user\n(text/SMS OTP — single-use enforcement in SSH proxy context)",
+   path:"curl POST userid → SMS OTP dispatched → present userid + OTP to SSH proxy (first use, within TTL) → SSH proxy [OTP validated: CONSUMED] → session proceeds → attempt second SSH connection with same OTP (within TTL) → SSH proxy [OTP state: CONSUMED] → authentication rejected before backend connection",
+   dst:"First SSH session: OTP accepted, session proceeds\nSecond attempt with same OTP: rejected — OTP consumed\nAudit event: otp_replay_rejected\npcap: no backend connection on second attempt",
+   note:"Critical. SMS OTP single-use in SSH proxy path. A reusable SMS OTP within its TTL would allow session hijack by OTP interception."},
+
+  {id:"TC-SVCINFRA-OTP-007",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Harness client\n(unregistered userid — submitted to both OTP channels)",
+   path:"Email channel: HTTPS POST unregistered-userid to cert delivery endpoint → generic error returned (indistinguishable from wrong-OTP error) → NO OTP email dispatched\nSMS channel: curl POST unregistered-userid to OTP service → generic error returned → NO SMS dispatched",
+   dst:"Both channels: generic error (no user enumeration signal)\nNo OTP dispatched on either channel\nResponse body and HTTP status code must not reveal whether userid exists",
+   note:"User enumeration prevention on both delivery channels. Timing consistency also required — response latency must not leak directory lookup result."},
+
+  {id:"TC-SVCINFRA-OTP-008",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"Medium",
+   src:"Harness client\n(rapid repeated OTP requests — both channels, same userid)",
+   path:"Email channel: repeat HTTPS POST userid in short window → Email OTP Service [per-userid rate limiter] → 429 after configured request limit\nSMS channel: repeat curl POST userid in short window → OTP Service [per-userid rate limiter] → 429 / throttle response after configured limit",
+   dst:"Both channels: 429 or throttle response after limit exceeded\nAudit event: rate_limit_triggered (per channel)\nRate limit parameters (count, window) documented",
+   note:"Independent rate limiters required on both channels. Rate limit prevents iterative OTP harvesting across both delivery paths."},
+
+  {id:"TC-SVCINFRA-OTP-009",grp:"SVCINFRA-OTP",layer:"SVCINFRA",dir:"Enrollment",risk:"High",
+   src:"Machine user proxy\n(userid registered as machine user in tenant directory — curl OTP flow)",
+   path:"curl -X POST [otp-service]/request -d userid=machineuser@domain → OTP Service [directory lookup: machine user ID active in tenant, registered phone number present] → SMS OTP dispatched to registered number → machine user proxy receives OTP (automated or monitored) → curl presents userid + OTP to SSH proxy → SSH proxy [OTP validated] → vault credential injected → SSH session to enterprise target established",
+   dst:"Machine user: SSH session established via proxy\nSSH proxy audit log: machine user ID shown as session identity\nVault read event: credential injected\nOTP consumption logged — machine user path identical to human user path",
+   note:"Machine user proxy flow must traverse identical authentication chain to human user. No bypass or exemption. userid@domain format applies to both human and machine users."},
+  {id:"TC-IPSec-ASA-001",grp:"IPSec-ASA",risk:"High",
+   src:"Cisco ASA (ASAv / FTD)\n(Partner-side, crypto-map, IKEv2, cert auth)",
+   path:"ASA [crypto ikev2 policy + proposal POC-PROPOSAL + profile POC-IKE-PROF] → IKE_SA_INIT (AES-256-GCM + SHA-384 + Group 19) → UDP/500 → Internet Zone → IKE_AUTH (cert: POC-PEER-CA, trustpoint enrollment) → IKE SA ESTABLISHED → IPSec SA: ESP AES-256-GCM + PFS Group 19 → crypto-map POC-MAP applied on outside interface",
+   dst:"Vendor edge: IKE SA + IPSec SA under crypto-map\nshow crypto ikev2 sa + show crypto ipsec sa: encaps/decaps increment",
+   note:"Policy-based only (no VTI). Config: crypto map POC-MAP 10 ipsec-isakmp + match address ACL-POC-ENCRYPT."},
+  {id:"TC-IPSec-ASA-002",grp:"IPSec-ASA",risk:"High",
+   src:"Cisco ASA\n(PSK auth, vault://ipsec-psk/t01/asa-peer, peer-scoped)",
+   path:"ASA [ikev2 keyring: peer <vendor-edge-ip> pre-shared-key <PSK>] → IKE_SA_INIT → IKE_AUTH (PSK, peer-scoped) → IKE SA ESTABLISHED (PSK)\nNEGATIVE: wrong-PSK attempt → AUTHENTICATION_FAILED",
+   dst:"Vendor edge: IKE SA with PSK auth\nKeyring config: peer-specific entry, no wildcard\nWrong-PSK: AUTHENTICATION_FAILED",
+   note:"No wildcard PSK. Config: tunnel-group <vendor-edge-ip> type ipsec-l2l + ipsec-attributes pre-shared-key <PSK>."},
+  {id:"TC-IPSec-ASA-003",grp:"IPSec-ASA",risk:"Critical",
+   src:"Cisco ASA\n(SCEP cert enrollment to tenant t01 CA)",
+   path:"ASA [crypto ca trustpoint POC-CA] → enrollment url http://[t01-CA]/certsrv/mscep/mscep.dll → crypto ca authenticate POC-CA (fetch CA cert) → crypto ca enroll POC-CA (submit CSR, receive signed cert) → cert installed in trustpoint → IKE profile references POC-CA",
+   dst:"ASA: signed cert installed in trustpoint POC-CA\nCA: cert serial in issued list\nIKE profile: cert auth operational\nshow crypto ca certificates: POC-CA chain present",
+   note:"SCEP enrollment pre-flight for cert-auth tests. Enrollment must succeed before ASA-001 runs."},
+  {id:"TC-IPSec-ASA-004",grp:"IPSec-ASA",risk:"High",
+   src:"Cisco ASA\n(DPD: crypto ikev2 enable outside dpd 30 2 on-demand)",
+   path:"Confirm DPD INFORMATIONAL exchanges at 30s intervals (pcap) → Block IKE traffic (simulate peer failure) → DPD timeout (60s: 30s × 2 retries) → IKE SA cleared by ASA → Restore connectivity → ASA re-initiates IKE_SA_INIT (on-demand trigger: new interesting traffic) → tunnel re-established",
+   dst:"Vendor edge: IKE SA cleared at DPD timeout\nASA re-initiates on new traffic trigger → tunnel re-established\nshow crypto ikev2 sa: new SA established",
+   note:"ASA DPD uses on-demand mode — re-initiation triggered by traffic, not dpd_action=restart. Re-establishment evidence: new IKE_SA_INIT in pcap."},
+  {id:"TC-IPSec-ASA-005",grp:"IPSec-ASA",risk:"High",
+   src:"Cisco ASA\n(SA rekey: shortened lifetimes for test — IKE 5m, IPSec 2m)",
+   path:"Continuous ping active → Wait IPSec SA lifetime (2 min) → ASA initiates INFORMATIONAL rekey (or new IKE_AUTH for full rekey) → new CHILD_SA with new SPI → ping log: zero drops → Wait IKE SA lifetime (5 min) → full IKE rekey → ping log: zero drops",
+   dst:"ASA: new SPI in show crypto ipsec sa\nPing log: zero drops throughout both rekey events\npcap: CREATE_CHILD_SA or new IKE_AUTH exchange",
+   note:"ASA SA rekey behaviour may differ from IOS-XE — some ASA versions do full IKE re-auth on IPSec rekey. Document observed behaviour."},
+  {id:"TC-IPSec-ASA-006",grp:"IPSec-ASA",risk:"Critical",
+   src:"Cisco ASA\n(6 weak algorithm negative proposals)",
+   path:"Test 1: crypto ikev2 policy with DES → IKE_SA_INIT → NO_PROPOSAL_CHOSEN\nTest 2: 3DES → NO_PROPOSAL_CHOSEN\nTest 3: MD5 PRF → NO_PROPOSAL_CHOSEN\nTest 4: DH Group 1 (modp768) → NO_PROPOSAL_CHOSEN\nTest 5: DH Group 2 (modp1024) → NO_PROPOSAL_CHOSEN\nTest 6: DH Group 5 (modp1536) → NO_PROPOSAL_CHOSEN",
+   dst:"Vendor edge: 6 × NO_PROPOSAL_CHOSEN\n6 × Wireshark NOTIFY(NO_PROPOSAL_CHOSEN) pcaps",
+   note:"Same cipher hygiene gate as TC-IPSec-XFORM-003. ASA-specific policy syntax: crypto ikev2 policy N with encryption/hash/group."},
+  {id:"TC-IPSec-CONN-001",grp:"IPSec-CONN",risk:"High",
+   src:"strongSwan harness host\n(tunnel established via TC-IPSec-VTI-008)",
+   path:"Pre: confirm vti0 UP + CHILD_SA INSTALLED → Bidirectional ICMP: ping from harness host → enterprise target (through VTI) → enterprise target pings back → Bidirectional TCP: curl https://[enterprise-target] from harness host → response received → Reverse: enterprise-initiated TCP to harness host → response received",
+   dst:"Both directions: ICMP replies received, TCP sessions established\nip xfrm state: encaps + decaps counters incrementing in both directions\npcap: ESP frames for all in-selector traffic",
+   note:"Positive connectivity gate. Confirms bidirectional data plane after transport establishment."},
+  {id:"TC-IPSec-CONN-002",grp:"IPSec-CONN",risk:"High",
+   src:"strongSwan harness host\n(traffic in-selector vs out-of-selector)",
+   path:"In-selector traffic (192.0.2.0/24 → 10.0.0.0/8): send packets → confirm ESP-encapsulated in pcap → ip xfrm counters: encaps increment\nOut-of-selector traffic (192.0.2.0/24 → 8.8.8.8): send packets → confirm dropped at vendor edge prefix filter → ip xfrm counters: NO increment for out-of-selector",
+   dst:"In-selector: ESP-encapsulated, counters increment\nOut-of-selector: dropped at prefix filter, no ESP encapsulation\npcap: two captures distinguishing in vs out traffic",
+   note:"Traffic confinement. Complements TC-IPSec-LIFE-001 prefix filter test with active data plane verification."},
+  {id:"TC-IPSec-CONN-003",grp:"IPSec-CONN",risk:"Critical",
+   src:"strongSwan harness host\n(pcap on WAN-facing interface during active tunnel traffic)",
+   path:"Establish tunnel → send high-volume in-selector traffic (TCP + ICMP, various ports) → capture WAN-facing interface during transmission → inspect all frames: no plaintext IP headers matching 192.0.2.0/24 → no unencapsulated TCP/UDP payloads → all in-selector traffic appears as ESP (proto 50) frames only",
+   dst:"WAN pcap: zero plaintext frames for in-selector traffic\nAll in-selector traffic: ESP (protocol 50) frames only\nNo IP header leakage in WAN capture",
+   note:"Critical. Plaintext leak = complete data exposure on WAN. pcap evidence is the primary artifact."},
+  {id:"TC-IPSec-CONN-004",grp:"IPSec-CONN",risk:"High",
+   src:"strongSwan harness host\n(large frame: 1400B payload — approaching MTU with tunnel overhead)",
+   path:"Send TCP segments with 1400B payload through VTI → confirm receipt at enterprise target (no silent drop) → confirm no ICMP fragmentation-needed if DF bit set → validate MSS clamping in effect OR path MTU discovery working correctly → send 1500B payload → observe: fragmented or PMTUD-triggered MSS reduction",
+   dst:"1400B payload: received at enterprise target intact\n1500B with DF: either MSS-clamped (no drop) or PMTUD-reduced and received\nNo silent drop of large frames",
+   note:"MTU/fragmentation. ESP overhead (50B+) reduces effective payload MTU. Silent drops cause application-layer hangs. MSS clamping config must be documented."},
+  {id:"TC-IPSec-CONN-005",grp:"IPSec-CONN",risk:"High",
+   src:"strongSwan harness host\n(active TCP session + DPD simulation)",
+   path:"Establish active long-lived TCP session (e.g. iperf or netcat) → Confirm DPD INFORMATIONAL at 30s intervals → Block IKE traffic (10s window, shorter than DPD timeout) → Restore IKE → DPD continues → Confirm: TCP session survives short IKE interruption → Extend block past DPD timeout → DPD clears SA → Confirm: TCP session RST or re-established after reconvergence",
+   dst:"Short interruption (<DPD timeout): TCP session survives\nFull DPD timeout: SA cleared → TCP RST or re-establishment\nBehaviour documented per timeout threshold",
+   note:"Session survival through DPD. Documents exact TCP behaviour at DPD boundary for operational runbook."},
+  {id:"TC-IPSec-CONN-006",grp:"IPSec-CONN",risk:"High",
+   src:"strongSwan harness host\n(active TCP session + SA rekey, shortened lifetimes)",
+   path:"Establish active TCP session (iperf continuous stream) → Wait IPSec SA rekey (CREATE_CHILD_SA) → pcap: new SPI in ESP headers → Confirm: TCP stream continues without RST → Wait IKE SA rekey (IKE_SA_INIT) → pcap: new IKE SA → Confirm: TCP stream continues without RST → Byte counters at both ends: no gaps in stream",
+   dst:"TCP stream: continuous, no RST during IPSec SA rekey\nTCP stream: continuous, no RST during IKE SA rekey\niperf report: no throughput gap during rekey events",
+   note:"Session continuity through SA rekey. Shortened lifetimes: IPSec SA 2 min, IKE SA 5 min. Production lifetimes will have much lower rekey frequency."},
+  {id:"TC-IPSec-CONN-007",grp:"IPSec-CONN",risk:"Medium",
+   src:"strongSwan harness host\n(asymmetric path: tunnel up on primary, return path via secondary interface)",
+   path:"Establish tunnel via primary WAN interface → Send traffic → Confirm symmetric ESP path (same interface both directions) → Simulate primary interface asymmetry (add secondary interface to return path) → Observe: ESP return path on secondary → Confirm: IKE SA maintained, CHILD_SA not torn down → Traffic continues with asymmetric ESP paths",
+   dst:"IKE SA: maintained on primary\nESP return: secondary interface accepted\nno CHILD_SA teardown on asymmetric return",
+   note:"Asymmetric path. Relevant for partners with ECMP or redundant uplinks where return ESP may arrive on different interface than outbound."},
+  {id:"TC-ENT-VTI-001",grp:"ENT-VTI",risk:"High",
+   src:"3PLZ Egress Proxy\n(pre-flight: /32 loopback reachability check)",
+   path:"Pre-flight: 3PLZ platform pings/probes PA-FW /32 loopback address → confirm reachable from 3PLZ egress proxy source IP → ICMP echo reply confirms L3 path exists → traceroute to /32 loopback: confirms path, no intermediate NAT",
+   dst:"PA-FW /32 loopback: reachable from 3PLZ\nICMP echo reply received within timeout\nNo intermediate NAT on path to /32",
+   note:"Required pre-flight before ENT-VTI-002. /32 loopback unreachable = IKE_SA_INIT will silently fail."},
+  {id:"TC-ENT-VTI-002",grp:"ENT-VTI",risk:"High",
+   src:"3PLZ Egress Proxy\n(IKEv2 initiator, cert auth, targeting PA-FW /32 loopback)",
+   path:"3PLZ [IKEv2 initiator: peer = PA-FW /32 loopback] → IKE_SA_INIT (AES-256-GCM + SHA-384 + Group 19) → UDP/500 → PA-FW /32 Loopback (Untrust Zone) → IKE_AUTH (cert: tenant-scoped credential) → PA-FW validates cert against t01 CA → IKE SA ESTABLISHED → IPSec SA: ESP AES-256-GCM + PFS Group 19 → VTI tunnel interface assigned to Tenant X Zone",
+   dst:"PA-FW: IKE SA established, tunnel interface in Tenant X Zone\nshow vpn ike-sa + ipsec-sa + interface tunnel.N\nIKE peer: /32 loopback (Untrust Zone) confirmed",
+   note:"Enterprise-side VTI establishment. IKE peer is /32 loopback in Untrust Zone — distinct from tunnel interface zone (Tenant X Zone)."},
+  {id:"TC-ENT-VTI-003",grp:"ENT-VTI",risk:"High",
+   src:"3PLZ Egress Proxy\n(IKEv2 initiator, PSK auth, vault://ipsec-psk/t01/ent-vti-peer)",
+   path:"3PLZ [IKEv2 PSK initiator: peer-id = PA-FW /32 loopback IP] → IKE_SA_INIT → IKE_AUTH (PSK, peer-scoped) → IKE SA ESTABLISHED (PSK) → VTI in Tenant X Zone\nNEGATIVE: wrong-PSK → AUTHENTICATION_FAILED",
+   dst:"PA-FW: IKE SA + VTI in Tenant X Zone (PSK auth)\nWrong-PSK: AUTHENTICATION_FAILED\nVault audit: one PSK read confirmed",
+   note:"PSK must be per-peer scoped on both 3PLZ and PA-FW sides. No wildcard peer."},
+  {id:"TC-ENT-VTI-004",grp:"ENT-VTI",risk:"Critical",
+   src:"3PLZ Egress Proxy\n(VTI established for tenant t01 and tenant t02 separately)",
+   path:"Establish t01 VTI → PA-FW: tunnel.t01 interface in Tenant-01-Zone → verify NOT in Untrust Zone, NOT in Tenant-02-Zone → Establish t02 VTI → PA-FW: tunnel.t02 interface in Tenant-02-Zone → verify NOT in Tenant-01-Zone → Confirm: no cross-zone routing between Tenant-01-Zone and Tenant-02-Zone",
+   dst:"t01 tunnel interface: Tenant-01-Zone (confirmed)\nt02 tunnel interface: Tenant-02-Zone (confirmed)\nNo route from Tenant-01-Zone to Tenant-02-Zone\nshow zone-protection: each zone independent",
+   note:"Zone assignment correctness gate. Wrong zone = cross-tenant traffic visibility. Must verify zone assignment via PA-FW API export."},
+  {id:"TC-ENT-VTI-005",grp:"ENT-VTI",risk:"Critical",
+   src:"3PLZ Egress Proxy\n(transform compliance on enterprise-side VTI)",
+   path:"Capture IKE_SA_INIT + IKE_AUTH for enterprise-side VTI → Wireshark decode SA payload → Verify: IKE SA = AES-256-GCM + SHA-384 + Group 19 → Verify: IPSec SA = ESP AES-256-GCM + PFS Group 19\nNEGATIVE: propose weak algorithm → NO_PROPOSAL_CHOSEN from PA-FW",
+   dst:"Enterprise-side VTI: AES-256-GCM + SHA-384 + Group 19 (both IKE and IPSec)\nWeak algorithm: NO_PROPOSAL_CHOSEN from PA-FW\nCompliance matrix entry for enterprise leg",
+   note:"Same CNSA/NIST cipher baseline on enterprise leg as partner leg. PA-FW must reject weak proposals."},
+  {id:"TC-ENT-VTI-006",grp:"ENT-VTI",risk:"High",
+   src:"3PLZ Egress Proxy\n(DPD from 3PLZ toward PA-FW Active)",
+   path:"Confirm DPD INFORMATIONAL at 30s intervals: 3PLZ → PA-FW Active (pcap) → PA-FW Active responds → Block traffic to PA-FW → DPD timeout → 3PLZ clears IKE SA → Restore traffic → 3PLZ re-initiates IKE_SA_INIT to PA-FW /32 loopback → tunnel re-established",
+   dst:"DPD INFORMATIONAL: pcap confirms exchange at 30s intervals\nDPD timeout: IKE SA cleared on 3PLZ side\nRe-establishment: new IKE_SA_INIT to /32 loopback → tunnel UP",
+   note:"DPD on enterprise leg. Re-establishment targets /32 loopback — if loopback has moved to new Active during outage, re-establishment must still succeed."},
+  {id:"TC-ENT-VTI-007",grp:"ENT-VTI",risk:"High",
+   src:"3PLZ Egress Proxy\n(SA rekey on enterprise-side VTI, shortened lifetimes)",
+   path:"Active traffic flow through enterprise VTI → Shorten IPSec SA lifetime → Wait rekey → CREATE_CHILD_SA exchange → new SPI → traffic continues without drop → Shorten IKE SA lifetime → Wait IKE rekey → IKE_SA_INIT exchange → new IKE SA → traffic continues without drop",
+   dst:"Enterprise VTI: SA rekey transparent to traffic\nNew SPI in ESP captures post-rekey\nZero traffic drops during both rekey events",
+   note:"Enterprise-side VTI rekey. PA-FW may initiate or respond — document which side initiates in test evidence."},
+  {id:"TC-ENT-VTI-008",grp:"ENT-VTI",risk:"Critical",
+   src:"3PLZ Egress Proxy\n(both t01 and t02 VTIs established)",
+   path:"t01 active traffic flowing: 3PLZ → Tenant-01-Zone → Enterprise Zone → Enterprise Backend-01 → Attempt from Tenant-01-Zone to reach Enterprise Backend-02 (which is in t02 path) → PA-FW zone-to-zone policy: Tenant-01-Zone → Tenant-02-Zone = NO POLICY (implicit deny) → traffic dropped → t02 sessions unaffected",
+   dst:"t01 → t02 zone: traffic dropped (implicit deny or explicit deny rule)\nt02 active sessions: unaffected\nPA-FW traffic log: t01→t02 deny event",
+   note:"Per-tenant zone isolation on PA-FW. No cross-tenant visibility at enterprise edge. Mirror of TC-CR05-002 but at enterprise PAN-OS layer."},
+  {id:"TC-ENT-HA-001",grp:"ENT-HA",risk:"High",
+   src:"PA-FW HA pair\n(pre-failover state verification)",
+   path:"Verify HA state: Active unit = primary, Passive unit = secondary → show high-availability state: both nodes healthy → Confirm: /32 loopback reachable only via Active unit → Confirm: HA sync established (config sync + session sync) → Confirm: all tenant VTIs established to Active unit only",
+   dst:"HA state: Active/Passive confirmed\n/32 loopback: responds only from Active unit\nHA sync: config + session sync ACTIVE\nAll tenant VTIs: to Active unit",
+   note:"Pre-failover baseline. Required before TC-ENT-HA-002 through -006."},
+  {id:"TC-ENT-HA-002",grp:"ENT-HA",risk:"Critical",
+   src:"3PLZ Egress Proxy\n(active VTIs to PA-FW Active unit)",
+   path:"Active tenant VTIs confirmed → Simulate Active unit failure (power off or HA suspend) → Passive unit promotion: show high-availability state → ACTIVE on Passive → /32 loopback: floats to new Active (GARP or HA DP floating IP) → 3PLZ DPD timeout fires → 3PLZ re-initiates IKE_SA_INIT to /32 loopback → IKE SA ESTABLISHED on new Active → VTI tunnel UP on new Active unit",
+   dst:"Passive promoted: show high-availability state = ACTIVE\n/32 loopback: now reachable via new Active (GARP confirmed in pcap)\nVTI reconvergence: IKE_SA_INIT to /32 → IKE SA on new Active\nReconvergence time documented (from failover to VTI UP)",
+   note:"Primary HA test. /32 loopback float is the critical event. GARP pcap on enterprise LAN confirms float. Reconvergence time = DPD timeout + IKE negotiation time."},
+  {id:"TC-ENT-HA-003",grp:"ENT-HA",risk:"Critical",
+   src:"Active traffic flows (multiple tenants)\n(during HA failover event)",
+   path:"All tenant VTIs active + traffic flowing → Initiate Active unit failure → Measure: time from failure to /32 loopback GARP → time from GARP to 3PLZ DPD fire → time from DPD to VTI reconvergence → In-flight sessions during failover: session sync state at moment of failure determines outcome → Document: sessions preserved (if sync current) vs sessions RST (if sync lagged)",
+   dst:"Reconvergence timeline documented per tenant\nSession sync state at failover: captured from PA-FW HA logs\nSession outcome: preserved or RST documented per tenant\nRecovery time objective (RTO) established",
+   note:"Session continuity evidence. PA-FW session sync interval determines whether sessions survive. RTO becomes an input to enterprise SLA commitments."},
+  {id:"TC-ENT-HA-004",grp:"ENT-HA",risk:"High",
+   src:"PA-FW HA pair\n(Active unit recovery after failover)",
+   path:"After TC-ENT-HA-002 failover: original Active unit recovers (power on) → confirm: recovered unit joins as Passive (does NOT pre-empt without preemption configured) → HA state: new Active remains Active, recovered unit = Passive → Config sync from new Active to recovered Passive → Confirm: no VTI disruption during recovery of original unit",
+   dst:"Recovered unit: joins as Passive (non-preemptive)\nHA state: new Active unchanged\nConfig sync: complete on recovered Passive\nVTIs: no disruption during recovery",
+   note:"Non-preemptive recovery. Prevents a second failover on original unit recovery. PA-FW default is non-preemptive — verify preemption is disabled."},
+  {id:"TC-ENT-HA-005",grp:"ENT-HA",risk:"High",
+   src:"PA-FW HA pair\n(multi-tenant simultaneous failover)",
+   path:"All 5 tenant VTIs active → Initiate HA failover → All 5 VTIs reconverge on new Active simultaneously → Confirm: each VTI reconverges to correct tenant zone (no zone cross-assignment during reconvergence race) → Confirm: no cross-tenant traffic during reconvergence window → All 5 VTIs UP on new Active",
+   dst:"All 5 VTIs: reconverged to correct tenant zones\nNo cross-tenant zone assignment during reconvergence\nReconvergence order: documented (may be sequential or parallel)\nAll tenant traffic: resumes on new Active",
+   note:"Multi-tenant failover. Simultaneous reconvergence must not cause zone assignment race condition. Evidence: PA-FW show vpn ike-sa (all 5 tenants) post-failover."},
+  {id:"TC-ENT-HA-006",grp:"ENT-HA",risk:"High",
+   src:"PA-FW HA pair\n(SNAT state during HA failover)",
+   path:"Active traffic with SNAT established → Initiate HA failover → Confirm: SNAT state synced to new Active (PA-FW syncs SNAT translations in HA) → In-flight sessions that used pre-failover SNAT state: confirm continued or RST → Post-failover new sessions: correct SNAT applied on new Active",
+   dst:"SNAT state: synced to new Active (PA-FW HA sync log)\nIn-flight sessions: continued (if sync current) or RST documented\nNew sessions post-failover: correct SNAT applied",
+   note:"SNAT continuity through HA failover. PA-FW syncs NAT state in HA — verify sync is active before this test."},
+  {id:"TC-ENT-SNAT-001",grp:"ENT-SNAT",risk:"Critical",
+   src:"Partner Client\n(active inbound session through full path)",
+   path:"Partner Client → 3PLZ Connection Point [SNAT #1: partner source IP → 3PLZ internal /30 peer address] → 3PLZ Inspection Engine [decrypt/inspect/encrypt] → 3PLZ Egress Proxy [SNAT #2: 3PLZ internal → enterprise-facing source IP] → IPSec VTI → PA-FW → Enterprise Backend → capture source IP seen by Enterprise Backend → verify = 3PLZ egress proxy IP (not partner IP, not 3PLZ internal IP)",
+   dst:"Enterprise Backend: source IP = 3PLZ egress proxy IP\nNOT partner client IP\nNOT 3PLZ internal /30 peer address\npcap at enterprise backend confirms correct source",
+   note:"Dual-SNAT correctness gate. If enterprise backend sees partner IP, SNAT #2 is misconfigured. If it sees 3PLZ internal, SNAT is incomplete."},
+  {id:"TC-ENT-SNAT-002",grp:"ENT-SNAT",risk:"Critical",
+   src:"PA-FW\n(pcap on enterprise-facing side of VTI)",
+   path:"Active inbound session from partner → capture on PA-FW tunnel interface (enterprise side of VTI) → inspect all packet headers → confirm: source IP = 3PLZ egress proxy enterprise-facing address → NO packet with partner source IP present → NO packet with 3PLZ internal /30 address present → SNAT confinement verified",
+   dst:"PA-FW tunnel interface pcap: zero partner IP frames\nZero 3PLZ internal /30 frames\nAll frames: source = 3PLZ egress proxy enterprise-facing IP only",
+   note:"Partner IP leakage through SNAT = partner identity exposure to enterprise. pcap is the primary evidence artifact."},
+  {id:"TC-ENT-SNAT-003",grp:"ENT-SNAT",risk:"High",
+   src:"3PLZ platform\n(per-tenant SNAT source IP assignment)",
+   path:"Establish sessions for tenant t01 and t02 simultaneously → Capture at PA-FW tunnel interface → Confirm: t01 sessions source from t01-assigned enterprise-facing IP → t02 sessions source from t02-assigned enterprise-facing IP → t01 IP ≠ t02 IP (no cross-tenant source collision) → PA-FW security policy per source IP can distinguish tenant traffic",
+   dst:"t01 sessions: source = t01 enterprise-facing IP\nt02 sessions: source = t02 enterprise-facing IP\nt01 IP ≠ t02 IP (no collision)\nPA-FW can distinguish tenant by source IP",
+   note:"Per-tenant SNAT. If both tenants share one egress IP, PA-FW zone-to-zone policy cannot distinguish tenant traffic by source."},
+  {id:"TC-ENT-SNAT-004",grp:"ENT-SNAT",risk:"High",
+   src:"3PLZ platform\n(SNAT state on 3PLZ restart / HA event)",
+   path:"Active sessions established with SNAT state → Simulate 3PLZ restart or failover → Existing sessions: RST or re-established (document behaviour) → New sessions post-restart: SNAT #1 and SNAT #2 applied correctly → PA-FW sees correct enterprise-facing source IP for new sessions → No stale SNAT state causing source IP collision",
+   dst:"Post-restart new sessions: correct SNAT applied on both points\nNo stale SNAT state: no source IP collision\nIn-flight sessions: RST or re-established (documented)",
+   note:"SNAT state recovery. Stale SNAT mappings post-restart could cause source IP reuse or collision."},
+  {id:"TC-ENT-ZONE-001",grp:"ENT-ZONE",risk:"Critical",
+   src:"3PLZ Egress Proxy\n(traffic in Tenant X Zone targeting Enterprise Zone)",
+   path:"Tenant VTI UP → traffic from 3PLZ in Tenant X Zone → zone-to-zone policy check: Tenant X Zone → Enterprise Zone → NO POLICY = implicit deny → add explicit permit policy → retry → traffic passes → reach Extranet Switch → Enterprise Backend",
+   dst:"Without policy: traffic blocked (implicit deny)\nWith explicit policy: traffic reaches Enterprise Backend\nPA-FW traffic log: implicit-deny + explicit-permit events documented",
+   note:"Explicit permit gate. PA-FW has no implicit inter-zone allow. Policy must be provisioned as part of tenant lifecycle."},
+  {id:"TC-ENT-ZONE-002",grp:"ENT-ZONE",risk:"Critical",
+   src:"Traffic in Tenant-01-Zone\n(attempting to reach Enterprise Backend in Tenant-02 path)",
+   path:"t01 VTI UP → traffic from t01 in Tenant-01-Zone → attempt to reach t02 enterprise target (via Tenant-02-Zone) → zone-to-zone policy: Tenant-01-Zone → Tenant-02-Zone = NO POLICY (implicit deny) → traffic dropped → PA-FW log: cross-tenant zone deny event → t02 traffic unaffected",
+   dst:"Cross-tenant zone: traffic denied\nPA-FW log: cross-tenant deny event\nt02 traffic: continues unaffected\nNo cross-tenant enterprise visibility",
+   note:"Enterprise-side zone isolation. Mirrors TC-CR05-002 v4 (routing cross-tenant) at the PA-FW layer."},
+  {id:"TC-ENT-ZONE-003",grp:"ENT-ZONE",risk:"High",
+   src:"3PLZ Egress Proxy\n(DLP/inspection profile on zone-to-zone path)",
+   path:"Configure threat prevention/DLP profile on Tenant X Zone → Enterprise Zone security policy → send test payload with known DLP signature (e.g. PAN test string or CC number pattern) → PA-FW zone-to-zone policy applies profile → DLP match: log + block (or alert per policy) → send clean traffic → permitted → Confirm: DLP events in PA-FW threat log",
+   dst:"DLP trigger: detected and actioned per policy\nPA-FW threat log: DLP match event for test payload\nClean traffic: passed\nDLP profile applied on inter-zone path confirmed",
+   note:"DLP inline on zone-to-zone path. Profile applied at PA-FW inter-zone boundary, not at 3PLZ inspection engine."},
+  {id:"TC-ENT-ZONE-004",grp:"ENT-ZONE",risk:"Critical",
+   src:"Harness orchestrator\n(tenant t03 offboard — enterprise side)",
+   path:"Execute enterprise tenant offboard for t03 → Remove from PA-FW: tunnel interface, IKE profile, IKE gateway, zone (Tenant-03-Zone), security policy objects (Tenant-03-Zone → Enterprise Zone) → Confirm via PA-FW API export: zero t03 zone objects → VTI from 3PLZ to t03: DPD timeout + re-establishment attempt → AUTHENTICATION_FAILED (profile removed) → 3PLZ confirms tunnel DOWN",
+   dst:"PA-FW API export: zero t03 zone/tunnel/policy objects\nVTI re-establishment: AUTHENTICATION_FAILED (no profile)\n3PLZ: tunnel DOWN confirmed\nResidual state: clean",
+   note:"Enterprise-side offboard. Must be coordinated with 3PLZ-side offboard (TC-CR04-002). Both sides must complete before tenant is considered offboarded."},
+  {id:"TC-ENT-ZONE-005",grp:"ENT-ZONE",risk:"High",
+   src:"3PLZ Egress Proxy\n(zone-to-zone allow-list: only declared services permitted)",
+   path:"Zone-to-zone policy: Tenant X Zone → Enterprise Zone permits only declared application/port set (e.g. TCP/443, TCP/22) → Send declared traffic: TCP/443 → permit + log → Send undeclared traffic: TCP/8080 → implicit deny + log → Confirm: no lateral movement via undeclared ports through enterprise zone policy",
+   dst:"Declared services: permitted\nUndeclared services: denied\nPA-FW traffic log: permit + deny events per application\nNo lateral movement via undeclared ports",
+   note:"Allow-list on zone-to-zone policy. Enterprise Zone policy enforces service-level access, not just zone permit."},
+  {id:"TC-ENT-VLAN-001",grp:"ENT-VLAN",risk:"High",
+   src:"PA-FW\n(802.1Q subinterface per tenant, /30 P2P to Extranet Switch)",
+   path:"PA-FW subinterface: ethernet1/X.VLAN_ID (e.g. eth1/2.101 for t01, eth1/2.102 for t02) → Verify VLAN tag correct per tenant (show interface ethernet1/2.101 → VLAN 101) → /30 IP assigned on subinterface (PA-FW gets .1, Extranet switch gets .2) → ARP adjacency: PA-FW pings Extranet switch /30 next-hop → ARP entry confirmed",
+   dst:"Subinterface VLAN tag: correct per tenant\n/30 IP: assigned on PA-FW subinterface\nARP adjacency: PA-FW ↔ Extranet switch .2 confirmed\nping /30 next-hop: responds",
+   note:"802.1Q subinterface and /30 adjacency gate. Must pass before ENT-VLAN-004 end-to-end test."},
+  {id:"TC-ENT-VLAN-002",grp:"ENT-VLAN",risk:"Critical",
+   src:"PA-FW + Extranet Switch\n(cross-tenant VLAN isolation)",
+   path:"VLAN 101 (t01) and VLAN 102 (t02) both active on 802.1Q trunk → From t01 /30 subnet: send traffic tagged VLAN 101 → Extranet switch: traffic arrives on VLAN 101 port only → No leakage to VLAN 102 port → Attempt VLAN hopping (double-tag attack): crafted 802.1Q double-tagged frame → Extranet switch: drops or does not forward to inner VLAN → t02 VLAN 102 receives zero t01 frames",
+   dst:"VLAN 101 traffic: received on VLAN 101 port only\nVLAN 102 port: zero t01 frames\nDouble-tag attempt: dropped or not forwarded to inner VLAN\nCross-tenant VLAN isolation confirmed",
+   note:"VLAN isolation at Extranet switch. Double-tag VLAN hopping must be mitigated (native VLAN != data VLAN on trunk)."},
+  {id:"TC-ENT-VLAN-003",grp:"ENT-VLAN",risk:"High",
+   src:"PA-FW\n(per-tenant /30 routing to Extranet Switch and beyond)",
+   path:"Confirm /30 adjacency (TC-ENT-VLAN-001) → PA-FW route table: default or specific route via /30 next-hop for enterprise destinations → Extranet switch: route for enterprise subnets via PA-FW /30 (or static toward enterprise) → send TCP traffic from t01 zone through PA-FW subinterface → Extranet switch forwards → enterprise backend reached → return path via Extranet switch → PA-FW → Tenant Zone",
+   dst:"PA-FW route: enterprise destination via /30 next-hop\nExtranet switch: route to enterprise subnets\nTCP traffic: transits PA-FW subinterface → Extranet switch → enterprise backend\nReturn path: bidirectional confirmed",
+   note:"/30 routing adjacency and forwarding. Extranet switch routing config must include per-tenant /30 next-hop toward PA-FW."},
+  {id:"TC-ENT-VLAN-004",grp:"ENT-VLAN",risk:"High",
+   src:"Partner Client\n(full end-to-end path verification — all hops)",
+   path:"Partner Client → Partner-to-3PLZ IPSec (/30) → 3PLZ Connection Point (SNAT #1) → 3PLZ Inspection Engine (decrypt/inspect/encrypt) → 3PLZ Egress Proxy (SNAT #2) → 3PLZ-to-Enterprise IPSec (/30) → PA-FW /32 Loopback (Untrust) → Tenant X Zone (tunnel interface) → Zone-to-Zone policy → Enterprise Zone → 802.1Q /30 subinterface → Extranet Switch → Enterprise Backend → Return path (all hops reversed)",
+   dst:"Enterprise Backend: receives request, source = 3PLZ egress proxy IP\nReturn path: traverses all hops back to Partner Client\nAll intermediate hop counts confirmed in traceroute\nTotal RTT and hop count documented",
+   note:"Full end-to-end path test. Traceroute from partner to enterprise backend documents all hops. This is the final integration gate for the complete topology."}
+];
+
+function badgeGrp(g){
+  const m={
+    'CR-01':'cr1','CR-02':'cr2','CR-03':'cr3','CR-04':'cr4',
+    'CR-05':'cr5','CR-06':'cr6','CR-07':'cr7',
+    'IPSec-VTI':'cripx','IPSec-CM':'cripx','IPSec-XFORM':'cripx','IPSec-LIFE':'cripx',
+    'SVCINFRA-CERT':'crsvc','SVCINFRA-OTP':'crsvc',
+    'IPSec-ASA':'crasa',
+    'IPSec-CONN':'crcnn',
+    'ENT-VTI':'crent','ENT-HA':'crent','ENT-SNAT':'crent','ENT-ZONE':'crent','ENT-VLAN':'crent'
+  };
+  return `<span class="cr-badge ${m[g]||'cripx'}">${g}</span>`;
+}
+function badgeLayer(l){
+  const m={'1':'l1','2':'l2','3':'l3','4':'l4','I-Plane':'lip','Transport':'ltp','SVCINFRA':'lsvc'};
+  const labels={'1':'Layer 1','2':'Layer 2','3':'Layer 3 — Adv','4':'Layer 4','I-Plane':'Insp. Plane','Transport':'Transport','SVCINFRA':'SVCINFRA'};
+  return `<span class="layer-badge ${m[l]||'ltp'}">${labels[l]||l}</span>`;
+}
+function badgeRisk(r){
+  const m={'Critical':'risk-critical','High':'risk-high','Medium':'risk-medium','Low':'risk-low'};
+  return `<span class="risk-badge ${m[r]||'risk-medium'}">${r}</span>`;
+}
+function badgeDir(d){
+  const m={'Inbound':'dir-in','Outbound':'dir-out','Control':'dir-ctrl','API':'dir-api','Enrollment':'dir-enroll'};
+  return `<span class="cr-badge ${m[d]||'dir-ctrl'}">${d}</span>`;
+}
+function formatPath(p){
+  return p.replace(/→/g,'<span class="arrow"> → </span>')
+          .replace(/\[(.*?)\]/g,'<span style="color:#185FA5;font-weight:500">[$1]</span>')
+          .replace(/\n/g,'<br>');
+}
+
+function render(){
+  const grp=document.getElementById('grpFilter').value;
+  const layer=document.getElementById('layerFilter').value;
+  const risk=document.getElementById('riskFilter').value;
+  const dir=document.getElementById('dirFilter').value;
+  const q=document.getElementById('search').value.toLowerCase();
+  let shown=0;
+  const tb=document.getElementById('tbody');
+  tb.innerHTML='';
+  TC.forEach(t=>{
+    const match=
+      (!grp||t.grp===grp)&&
+      (!layer||t.layer===layer)&&
+      (!risk||t.risk===risk)&&
+      (!dir||t.dir===dir)&&
+      (!q||t.id.toLowerCase().includes(q)||t.path.toLowerCase().includes(q)||t.src.toLowerCase().includes(q)||t.dst.toLowerCase().includes(q)||(t.note&&t.note.toLowerCase().includes(q)));
+    if(!match){return;}
+    shown++;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><span class="tc">${t.id}</span>${t.note?`<br><span class="note" style="margin-top:3px;display:block">${t.note}</span>`:''}  </td>
+      <td>${badgeGrp(t.grp)}</td>
+      <td>${badgeLayer(t.layer)}</td>
+      <td>${badgeDir(t.dir)}</td>
+      <td><span class="source-dest">${t.src.replace(/\n/g,'<br>')}</span></td>
+      <td><div class="path">${formatPath(t.path)}</div></td>
+      <td><span class="source-dest">${t.dst.replace(/\n/g,'<br>')}</span></td>
+      <td>${badgeRisk(t.risk)}</td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById('shown').textContent=shown;
+}
+
+['grpFilter','layerFilter','riskFilter','dirFilter'].forEach(id=>
+  document.getElementById(id).addEventListener('change',render));
+document.getElementById('search').addEventListener('input',render);
+render();
+</script>
+</body>
+</html>
