@@ -1,0 +1,44 @@
+
+[1mDataset: [0;36mzscaler-three[0m  [0;32mZscaler[0m  [  PROXY  data:2026-05-15]
+  File   : ip_dataset_00145_20260515.csv
+  Columns: CIDR→IP_NETWORK | REGION→REGION | SERVICE→SERVICE
+  Total  : 34 rows  →  34 matching
+
+[1m  IP_NETWORK          REGION            SERVICE      IP_DATASET_CLASS  SERVICE_TYPE_CODE  SERVICE_TYPE_LABEL  PROVIDER[0m
+  ──────────────────  ────────────────  ───────────  ────────────────  ─────────────────  ──────────────────  ────────
+  [1m8.25.203.0/24     [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m64.74.126.64/26   [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m70.39.159.0/24    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m72.52.96.0/26     [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m87.58.64.0/18     [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m89.167.131.0/24   [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m101.2.192.0/18    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m104.129.192.0/20  [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m112.196.99.180/32 [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m136.226.0.0/16    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m137.31.0.0/16     [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m137.83.128.0/18   [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m147.161.128.0/17  [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m159.254.0.0/16    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m159.254.62.0/23   [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m159.254.66.0/23   [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m165.225.0.0/17    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m165.225.192.0/18  [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m167.103.0.0/16    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m167.106.0.0/16    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m170.85.0.0/16     [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m175.107.128.0/18  [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m185.46.212.0/22   [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m194.9.96.0/20     [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m194.9.112.0/22    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m194.9.116.0/24    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m198.14.64.0/18    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m199.168.148.0/24  [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m205.220.0.0/17    [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m209.55.128.0/18   [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m209.55.192.0/19   [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m213.152.228.0/24  [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m216.52.207.64/26  [0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+  [1m216.218.133.192/26[0m  zscalerthree.net  Zscaler-ZIA  SAAS              PROXY              Secure Web Proxy    Zscaler 
+
+  34 row(s)  |  zscaler-three  |  Zscaler
