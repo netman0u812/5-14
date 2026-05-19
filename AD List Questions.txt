@@ -1,0 +1,50 @@
+1 — AHM domain DCs are completely absent
+from IPAM (10 IPs, 172.18.182.x / 172.18.187.x / 172.18.246.x)
+
+ahm.corp and ahmdmz.corp — Aetna Health Management — have 10 DCs in
+172.18.182.x, 172.18.187.x, and 172.18.246.x that have no IPAM entry at
+all. 172.18.4.0/23 is in IPAM as Internal-HCB (Phoenix Aetna DC) but not
+the specific /24s these DCs live in. These need to be added. 2 —
+172.200.118.238 is a public IP being used as an internal LDAP VIP
+
+adldap.ahmdmz.corp is at 172.200.118.238. That's not RFC1918 —
+172.200.x.x is publicly routable address space (Microsoft/Azure). This
+is almost certainly an Azure internal network address visible within a
+VNet but it has no IPAM entry and its nature is ambiguous. Needs
+investigation before adding to IPAM. 
+
+3 — 167.69.251.252 (aetldap.aetna.com) not in IPAM
+
+Single missing public Aetna IP — the root domain LDAP VIP. The two
+aetldap.aetna.com entries (167.69.68.181 and 167.69.251.252) are F5 LDAP
+load balancer VIPs. The .68.181 is in IPAM as Internal-HCB; .251.252 is
+completely absent. Since 167.69.251.x is in the Aetna 167.69 block, this
+can be added straightforwardly — but it's Internet-Facing or
+Internal-HCB depending on whether this VIP is externally reachable.
+Given it's the root aetna.com LDAP VIP, likely Internal-HCB. 
+
+4 — Two DCs (10.80.232.21/22) resolving as Internal-Retail — wrong
+
+HVCTHEHT01/02.healthehostt.com are HealtheHost TEST domain domain
+controllers at 10.80.232.21/22. The IPAM LPM is matching them against a
+retail store subnet (Heath TX - Store HEA). These are DCs, not retail
+devices. This is the CONTESTED_BLOCK overlap problem in action —
+10.80.232.0/24 is being claimed by retail_networks for store
+allocations. These servers need their own IPAM entry with Internal-HCB
+or Internal-PBM, and the /24 needs CONTESTED_BLOCK=Y. 
+
+5 — FSMO role holders not in EHM
+
+Three FSMO role holders are untracked: MIDQ-AETDMZQ901.AETDMZQ.com
+(RIDMaster, 157.121.36.141) and HVCTHEHT01/02.healthehostt.com
+(PDCEmulator, SchemaMaster, DomainNamingMaster, RIDMaster). These are
+identity infrastructure critical path — they should be in EHM with
+RISK_TIER=High Risk and CSNA_HOSTGROUP_PATH pointing to the Identity
+zone.
+
+6 — All 167.69.x DC IPs are correctly Internal-HCB — the v3.80
+Internet-Facing reclassification didn't touch them. The DC subnets
+(167.69.90.x, 167.69.91.x, 167.69.32.x) are not in the BGP announcement
+table so they correctly stayed as Internal-HCB. The DCs that use public
+167.69 addresses are running on the internal Aetna HCB network, using
+that address space as internal-only.
