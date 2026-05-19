@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cisco Secure Network Analytics — Enterprise Deployment Vision & Strategy | CVS Health</title>
+<style>
+:root{
+  --red:#CC0000;--dark-red:#990000;--light-red:#FDECEA;
+  --black:#1A1A1A;--dark-gray:#333333;--mid-gray:#767676;
+  --light-gray:#E0E0E0;--off-white:#F9F9F9;--white:#FFFFFF;
+  --blue:#1565C0;--light-blue:#EEF4FF;
+  --green:#2E7D32;--light-green:#F1F8F1;
+  --amber:#E65100;--light-amber:#FFF3E8;
+  --indigo:#3949AB;--light-indigo:#EEEEFF;
+  --font:'Helvetica Neue',Arial,sans-serif;
+  --mono:'Courier New',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--white);color:var(--black);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+
+nav{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:3px solid var(--red);padding:0 40px;display:flex;align-items:center;gap:18px;height:46px;box-shadow:0 1px 4px rgba(0,0,0,0.07);overflow-x:auto;flex-wrap:nowrap}
+.nb{font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);white-space:nowrap;flex-shrink:0}
+nav a{font-size:11px;color:var(--mid-gray);text-decoration:none;white-space:nowrap;transition:color .15s}
+nav a:hover{color:var(--red)}
+.nv{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--mid-gray);border:1px solid var(--light-gray);padding:2px 8px;border-radius:2px;flex-shrink:0}
+
+/* COVER */
+.cover{background:var(--white);border-bottom:4px solid var(--red);padding:56px 56px 44px}
+.cvs-wordmark{font-size:22px;font-weight:700;letter-spacing:.04em;color:var(--red);margin-bottom:4px}
+.cvs-wordmark span{color:var(--dark-gray);font-weight:400}
+.cover-divider{width:48px;height:3px;background:var(--red);margin:18px 0}
+.cover-title{font-size:clamp(26px,3.5vw,40px);font-weight:700;line-height:1.1;color:var(--black);margin-bottom:10px}
+.cover-sub{font-size:16px;color:var(--dark-gray);margin-bottom:28px}
+.cover-meta{font-family:var(--mono);font-size:11px;color:var(--mid-gray);line-height:2;border-top:1px solid var(--light-gray);padding-top:16px}
+.cover-meta span{display:inline-block;margin-right:32px}
+.cover-badge{display:inline-block;background:var(--light-red);border:1px solid #FFCDD2;color:var(--red);font-size:11px;font-weight:600;padding:3px 10px;border-radius:2px;letter-spacing:.04em}
+
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:0 40px}
+
+/* SECTIONS */
+section{padding:52px 0;border-bottom:1px solid var(--light-gray)}
+section:last-of-type{border-bottom:none}
+.ey{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:8px;font-weight:500}
+h2{font-size:clamp(20px,2.5vw,28px);font-weight:700;color:var(--black);margin-bottom:14px;line-height:1.2}
+h3{font-size:16px;font-weight:700;color:var(--black);margin-bottom:8px}
+h4{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:5px}
+p{color:var(--dark-gray);margin-bottom:12px;line-height:1.75}
+p:last-child{margin-bottom:0}
+.lead{font-size:15px;color:var(--dark-gray);line-height:1.8;max-width:820px}
+.code{font-family:var(--mono);font-size:11px;background:var(--off-white);border:1px solid var(--light-gray);padding:1px 5px;border-radius:2px;color:var(--dark-gray)}
+strong{font-weight:600}
+
+/* CALLOUTS */
+.call{border-left:3px solid;border-radius:0 3px 3px 0;padding:13px 17px;margin:14px 0}
+.call p{font-size:13px;margin:0;line-height:1.65;color:var(--dark-gray)}
+.call strong{color:var(--black)}
+.ct{border-color:var(--blue);background:var(--light-blue)}
+.cg{border-color:var(--green);background:var(--light-green)}
+.cr{border-color:var(--red);background:var(--light-red)}
+.cgo{border-color:var(--amber);background:var(--light-amber)}
+.cp{border-color:var(--indigo);background:var(--light-indigo)}
+
+/* EXECUTIVE SUMMARY BOX */
+.exec-box{background:var(--off-white);border:1px solid var(--light-gray);border-top:3px solid var(--red);border-radius:0 0 4px 4px;padding:24px 28px;margin-bottom:0}
+.exec-box p{font-size:14px;color:var(--dark-gray);line-height:1.8}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--light-gray);border-radius:4px;padding:18px 20px}
+.card.accent{border-top:3px solid var(--red)}
+.card-num{font-size:28px;font-weight:700;line-height:1;margin-bottom:4px}
+.card-lbl{font-size:11px;color:var(--mid-gray);line-height:1.4}
+
+/* STACK CARDS */
+.stack{border-radius:4px;padding:18px 20px;border:1px solid;margin-bottom:14px}
+.s1{border-color:#FFCDD2;background:#FFF8F8;border-left:4px solid var(--red)}
+.s2{border-color:#BBDEFB;background:#F8FBFF;border-left:4px solid var(--blue)}
+.s3{border-color:#C5CAE9;background:#F8F9FF;border-left:4px solid var(--indigo)}
+.s4{border-color:#CFD8DC;background:#F8F9FA;border-left:4px solid var(--dark-gray)}
+.s5{border-color:#C8E6C9;background:#F8FFF8;border-left:4px solid var(--green)}
+.stack-hdr{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.stack-num{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.s1 .stack-num{color:var(--red)}
+.s2 .stack-num{color:var(--blue)}
+.s3 .stack-num{color:var(--indigo)}
+.s4 .stack-num{color:var(--dark-gray)}
+.s5 .stack-num{color:var(--green)}
+.stack-title{font-size:15px;font-weight:700;color:var(--black)}
+.stack-body{font-size:13px;color:var(--dark-gray);line-height:1.65;margin-bottom:8px}
+.stack-telem{font-family:var(--mono);font-size:11px;color:var(--mid-gray);background:var(--off-white);border-radius:3px;padding:6px 10px;margin-top:8px}
+.stack-telem strong{color:var(--black);font-weight:600}
+
+/* PILLS */
+.pill{font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:2px;border:1px solid;display:inline-block;white-space:nowrap;margin:1px}
+.p1{border-color:#FFCDD2;color:var(--dark-red);background:#FFF5F5}
+.p2{border-color:#BBDEFB;color:var(--blue);background:#E8F4FD}
+.p3{border-color:#C5CAE9;color:var(--indigo);background:var(--light-indigo)}
+.p4{border-color:#CFD8DC;color:var(--dark-gray);background:var(--off-white)}
+.p5{border-color:#C8E6C9;color:var(--green);background:var(--light-green)}
+.pr{border-color:#FFCDD2;color:var(--red);background:var(--light-red)}
+.pg{border-color:#C8E6C9;color:var(--green);background:var(--light-green)}
+.pm{border-color:var(--light-gray);color:var(--mid-gray);background:var(--off-white)}
+.pgo{border-color:#FFCCBC;color:var(--amber);background:var(--light-amber)}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0}
+th{font-size:11px;font-weight:700;padding:8px 12px;background:var(--red);color:var(--white);text-align:left;letter-spacing:.03em}
+td{padding:8px 12px;border-bottom:1px solid var(--light-gray);color:var(--dark-gray);vertical-align:top}
+tr:nth-child(even) td{background:var(--off-white)}
+tr:last-child td{border-bottom:none}
+.mono{font-family:var(--mono);font-size:11px;color:var(--blue)}
+.mw{font-family:var(--mono);font-size:11px;color:var(--mid-gray)}
+.mr{font-family:var(--mono);font-size:11px;color:var(--red)}
+.mg{font-family:var(--mono);font-size:11px;color:var(--green)}
+
+/* PHASES */
+.phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:24px 0;position:relative}
+.phase-grid::before{content:'';position:absolute;top:28px;left:20px;right:20px;height:2px;background:linear-gradient(90deg,var(--red),var(--blue),var(--amber),var(--green))}
+.phase{padding-top:52px;position:relative;padding-right:14px}
+.p-dot{width:14px;height:14px;border-radius:50%;border:2px solid;position:absolute;top:22px;left:0;background:var(--white)}
+.phase:nth-child(1) .p-dot{border-color:var(--red);background:var(--red)}
+.phase:nth-child(2) .p-dot{border-color:var(--blue)}
+.phase:nth-child(3) .p-dot{border-color:var(--amber)}
+.phase:nth-child(4) .p-dot{border-color:var(--green)}
+.p-label{font-family:var(--mono);font-size:10px;color:var(--mid-gray);letter-spacing:.06em;margin-bottom:4px}
+.p-title{font-size:13px;font-weight:700;color:var(--black);margin-bottom:6px}
+.phase ul{list-style:none;display:flex;flex-direction:column;gap:3px}
+.phase li{font-size:11px;color:var(--mid-gray);line-height:1.5;padding-left:10px;position:relative}
+.phase li::before{content:'·';position:absolute;left:2px;color:var(--mid-gray)}
+
+/* DETECTION MATRIX */
+.det-row{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--light-gray)}
+.det-row:last-child{border-bottom:none}
+.det-threat{font-size:12px;color:var(--dark-gray);padding:8px 12px;width:180px;flex-shrink:0;font-weight:500}
+.det-cell{font-size:11px;padding:8px 8px;flex:1;text-align:center;border-left:1px solid var(--light-gray)}
+.good{color:var(--green);font-weight:600}
+.partial{color:var(--amber)}
+.limited{color:var(--red);font-size:10px}
+.na{color:var(--light-gray)}
+
+/* BAR */
+.brow{display:flex;align-items:center;gap:8px;margin:3px 0}
+.blbl{font-size:11px;color:var(--mid-gray);width:160px;flex-shrink:0}
+.btrack{flex:1;height:5px;background:var(--light-gray);border-radius:3px;overflow:hidden}
+.bfill{height:100%;border-radius:3px}
+.br2{background:var(--red)}.bb2{background:var(--blue)}.bg2{background:var(--green)}.bgo2{background:var(--amber)}.bin{background:var(--indigo)}
+.bval{font-family:var(--mono);font-size:11px;color:var(--mid-gray);min-width:40px;text-align:right}
+
+/* PREREQ ITEMS */
+.req{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--light-gray);align-items:flex-start}
+.req:last-child{border-bottom:none}
+.req-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:2px;flex-shrink:0;white-space:nowrap;margin-top:1px}
+.crit-badge{background:var(--light-red);color:var(--red);border:1px solid #FFCDD2}
+.attn-badge{background:var(--light-amber);color:var(--amber);border:1px solid #FFCCBC}
+.req-text{font-size:12px;color:var(--dark-gray);line-height:1.6}
+.req-text strong{color:var(--black)}
+
+footer{background:var(--off-white);border-top:1px solid var(--light-gray);padding:20px 40px;display:flex;align-items:center;justify-content:space-between}
+.fb{font-size:12px;font-weight:700;color:var(--red)}
+.fn{font-family:var(--mono);font-size:10px;color:var(--mid-gray)}
+
+@media print{nav{display:none}.cover{padding:32px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nb">&#10084; CVS Health &nbsp;|&nbsp; Cisco SNA Vision &amp; Strategy</div>
+  <a href="#vision">Vision</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#detection">Detection Coverage</a>
+  <a href="#telemetry">Telemetry</a>
+  <a href="#identity">Identity Layer</a>
+  <a href="#integration">Integration</a>
+  <a href="#governance">Data Governance</a>
+  <a href="#roadmap">Roadmap</a>
+  <a href="#success">Success Criteria</a>
+  <a href="#prereqs">Prerequisites</a>
+  <span class="nv">CCD Platform &middot; InfoSec</span>
+</nav>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cvs-wordmark">CVS Health <span>Information Security</span></div>
+  <div class="cover-divider"></div>
+  <div class="cover-title">Cisco Secure Network Analytics<br>Enterprise Deployment Vision &amp; Strategy</div>
+  <div class="cover-sub">Network Detection &amp; Response for a Multi-Heritage, 11,000-Location Enterprise</div>
+  <div class="cover-meta">
+    <span><strong>Program:</strong> CCD Platform | Network Visibility Initiative</span>
+    <span><strong>Author:</strong> M. J. Martin, Lead Director &mdash; Information Security</span>
+    <span><strong>Version:</strong> 1.0 &nbsp;&nbsp;<strong>Date:</strong> 2026-05-19</span>
+    <span><strong>Status:</strong> DRAFT</span>
+    <span><strong>Data basis:</strong> IPAM v3.78 &middot; LM v5.9g &middot; Retail v2.8</span><br>
+    <span class="cover-badge">CONFIDENTIAL AND PROPRIETARY</span>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- EXECUTIVE SUMMARY -->
+<section id="vision">
+  <div class="ey">Executive Summary</div>
+  <h2>The SNA vision for CVS Health</h2>
+
+  <div class="exec-box">
+    <p>CVS Health operates one of the most architecturally complex enterprise networks in the United States &mdash; the product of 15+ years of acquisitions culminating in the 2018 Aetna merger. Two heritage enterprises, four overlapping RFC1918 address spaces, six routing domains, 11,000 retail locations, and a SNAT-masked SD-WAN fabric create a network environment that standard NDR deployment models cannot accommodate without modification.</p>
+    <p style="margin-top:10px">This document defines the strategic vision and deployment architecture for Cisco Secure Network Analytics (CSNA) as the enterprise-wide Network Detection and Response platform for CVS Health. The model is grounded in validated analysis of three production datasets comprising 326,809 records. The central architectural conclusion is a <strong>five-stack independent Manager deployment</strong>, each stack representing a distinct routing domain with its own telemetry mechanism, Flow Collector placement, and behavioral baseline scope. Cross-domain threat correlation is delivered by Cisco XDR and Splunk, which operate above the SNA layer using entity-based correlation rather than IP-based host tracking.</p>
+    <p style="margin-top:10px">When fully deployed, CSNA will provide pervasive NetFlow visibility across CVS Enterprise, Aetna Enterprise, CVS Retail (at the SD-WAN aggregate level), the Switch COLO fabric, and the cloud infrastructure &mdash; covering every major routing domain in the CVS Health environment without requiring a single physical traffic tap.</p>
+  </div>
+
+  <div class="g5" style="margin-top:24px">
+    <div class="card accent"><div class="card-num" style="color:var(--red)">5</div><div class="card-lbl">Independent SNA Manager stacks — IP isolation by construction</div></div>
+    <div class="card"><div class="card-num" style="color:var(--blue)">45</div><div class="card-lbl">Confirmed IP collisions proving single-Manager architecture is insufficient</div></div>
+    <div class="card"><div class="card-num" style="color:var(--indigo)">9,144</div><div class="card-lbl">Retail stores — SNAT-masked, store WAN IP is the only visible host identifier</div></div>
+    <div class="card"><div class="card-num" style="color:var(--dark-gray)">20,942</div><div class="card-lbl">Enterprise subnets fully assigned to stacks — 100% coverage</div></div>
+    <div class="card"><div class="card-num" style="color:var(--green)">0</div><div class="card-lbl">Physical traffic taps required across all five stacks</div></div>
+  </div>
+
+  <div style="margin-top:28px">
+    <h3>Strategic objectives</h3>
+    <div class="g2" style="margin-top:12px;gap:14px">
+      <div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:12px;padding:12px 14px;background:var(--off-white);border-radius:3px;border-left:3px solid var(--red)">
+            <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--red)">01</div>
+            <div><strong style="font-size:13px">Pervasive network visibility</strong><br><span style="font-size:12px;color:var(--dark-gray)">NetFlow telemetry across all five routing domain clusters. Every major traffic path is covered. No blind spots at the enterprise routing layer.</span></div>
+          </div>
+          <div style="display:flex;gap:12px;padding:12px 14px;background:var(--off-white);border-radius:3px;border-left:3px solid var(--red)">
+            <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--red)">02</div>
+            <div><strong style="font-size:13px">Behavioral threat detection</strong><br><span style="font-size:12px;color:var(--dark-gray)">ML-driven anomaly detection against domain-accurate behavioral baselines. Detect PHI exfiltration, ransomware precursors, C2 beaconing, and insider threat behaviors that bypass signature-based controls.</span></div>
+          </div>
+          <div style="display:flex;gap:12px;padding:12px 14px;background:var(--off-white);border-radius:3px;border-left:3px solid var(--red)">
+            <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--red)">03</div>
+            <div><strong style="font-size:13px">Identity-enriched analytics</strong><br><span style="font-size:12px;color:var(--dark-gray)">ISE pxGrid integration binds network flows to user and device identity per stack. User behavioral analytics without a separate UEBA platform.</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:12px;padding:12px 14px;background:var(--off-white);border-radius:3px;border-left:3px solid var(--blue)">
+            <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--blue)">04</div>
+            <div><strong style="font-size:13px">Compliance evidence</strong><br><span style="font-size:12px;color:var(--dark-gray)">SNA detection coverage mapped to SOC 2 network monitoring controls. Cisco Talos TI and Encrypted Traffic Analytics (ETA) support HIPAA and PCI DSS network security requirements.</span></div>
+          </div>
+          <div style="display:flex;gap:12px;padding:12px 14px;background:var(--off-white);border-radius:3px;border-left:3px solid var(--blue)">
+            <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--blue)">05</div>
+            <div><strong style="font-size:13px">XDR-integrated incident response</strong><br><span style="font-size:12px;color:var(--dark-gray)">SNA detections feed Cisco XDR for cross-stack correlation with endpoint, email, and DNS signals. SNA is the network telemetry hub of the CVS security stack.</span></div>
+          </div>
+          <div style="display:flex;gap:12px;padding:12px 14px;background:var(--off-white);border-radius:3px;border-left:3px solid var(--blue)">
+            <div style="flex-shrink:0;font-size:13px;font-weight:700;color:var(--blue)">06</div>
+            <div><strong style="font-size:13px">Data-governed configuration</strong><br><span style="font-size:12px;color:var(--dark-gray)">CCD Platform datasets (location_master, all_IP_networks, retail_networks) are the authoritative source for SNA host group configuration. Stack assignment is derived, not manually entered.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="ey">Section 1</div>
+  <h2>The five-stack architecture &mdash;<br>derived from production data, not assumed</h2>
+  <p class="lead">The five-stack model is not an arbitrary organizational choice. It is the minimum architecture that correctly resolves CVS Health&rsquo;s IP overlap constraints. The decision is data-driven: analysis of the production IPAM (v3.78) identified <strong>45 confirmed IP address collisions</strong> across the CVS Enterprise and Aetna Enterprise routing domains, and the retail dataset confirmed that store device IPs are permanently SNAT-masked at the store edge. A single SNA Manager with domain isolation would silently corrupt behavioral baselines for all 45 collision IPs from day one. Five independent Manager + Data Store instances eliminate this by construction.</p>
+
+  <div class="call cr">
+    <p><strong>Why five stacks are mandatory, not optional:</strong> In SNA, behavioral analytics build per-host baselines keyed on IP address. When the same IP address represents two different physical hosts in different routing domains, a shared Manager creates a composite baseline for a fictional entity. Alerts generated from this baseline are unreliable in both directions &mdash; false positives and false negatives. The 45 confirmed collisions include public address space (157.121.x, 206.213.x), RFC1918 (10.x, 172.x), GCP BU allocations, and even documentation space (203.0.113.0). Without five separate Managers, CVS Health cannot produce trustworthy SNA detections for any subnet in the collision inventory.</p>
+  </div>
+
+  <div style="margin-top:24px">
+    <div class="stack s1">
+      <div class="stack-hdr">
+        <span class="stack-num">Stack 1</span>
+        <span class="stack-title">CVS Enterprise</span>
+        <span class="pill p1">11,847 subnets</span>
+        <span class="pill p1">Internal-PBM</span>
+      </div>
+      <div class="stack-body">CVS legacy enterprise estate: Shea DC (Scottsdale AZ), RI One (Woonsocket RI), RI-2100 Highland (Cumberland RI), Wood Dale IL, and all CVS internet egress points. PBM workloads, enterprise applications, corporate systems, Omnicare, Caremark/CVS heritage, Distribution Centers, Call Centers. Contains 191 Aetna-heritage subnets at co-located DC campuses (Shea hosts Aetna workloads on CVS routing) &mdash; documented as expected behavior at shared campuses, not misconfiguration.</div>
+      <div class="stack-telem"><strong>Telemetry:</strong> Unsampled NetFlow v9/IPFIX from all Cisco switches at CVS DC and egress boundaries &middot; FTD connection logs (100K eps) &middot; PAN-OS IPFIX with App-ID at CVS perimeter firewalls &middot; ISE pxGrid (CVS scope) for user/device identity binding &middot; Secure Client NVM for CVS remote workers</div>
+    </div>
+
+    <div class="stack s2">
+      <div class="stack-hdr">
+        <span class="stack-num">Stack 2</span>
+        <span class="stack-title">Aetna Enterprise</span>
+        <span class="pill p2">5,293 subnets</span>
+        <span class="pill p2">Internal-HCB</span>
+      </div>
+      <div class="stack-body">Aetna legacy enterprise estate: Middletown CT (MDC), Windsor CT (WDC), Phoenix AZ (Aetna DC), Hartford CT HQ, and Aetna internet egress. HCB workloads, Claims, CarePlus VDC fleet (91 field sites), Member Portal, Aetna corporate. Contains 29 CVS/Caremark-heritage subnets at Aetna DCs &mdash; bi-directional cross-heritage at shared DC campuses is confirmed normal at Windsor and Middletown.</div>
+      <div class="stack-telem"><strong>Telemetry:</strong> Unsampled NetFlow v9/IPFIX from Cisco switches at Aetna DC and egress boundaries &middot; FTD connection logs &middot; PAN-OS IPFIX with App-ID at Aetna perimeter &middot; ISE pxGrid (Aetna scope &mdash; separate subscription from Stack 1) &middot; Secure Client NVM for Aetna remote workers</div>
+    </div>
+
+    <div class="stack s3">
+      <div class="stack-hdr">
+        <span class="stack-num">Stack 3</span>
+        <span class="stack-title">CVS Retail &mdash; SNAT-masked</span>
+        <span class="pill p3">9,144 stores</span>
+        <span class="pill p3">Internal-Retail</span>
+        <span class="pill" style="border-color:#FFCDD2;color:var(--red);background:var(--light-red)">SNAT boundary</span>
+      </div>
+      <div class="stack-body">All 9,144 CVS Retail stores (including co-located MinuteClinic and Optical). Every store routes device traffic through PAT at the 128T SD-WAN router edge. Internal device IPs (172.16&ndash;172.31.x/26 per-store LAN space, POS servers, Rx servers, workstations, alarm panels) are permanently invisible to enterprise NetFlow. SNA collects only from the 128T SD-WAN hub controllers at RI One and Shea DC, where source IPs represent store WAN/tunnel endpoints &mdash; one effective host per store. The 294,341 device IP records in retail_networks v2.8 describe the store-internal address plan behind the SNAT boundary and have no SNA relevance at the enterprise collection level. SNA host group = store WAN IP, one per SITE_CODE.</div>
+      <div class="call cgo" style="margin:8px 0 0"><p><strong>PCI compliance note:</strong> 84.4% of retail stores carry PCI designation in the IPAM (POS, Rx systems). SNA detects store-level aggregate anomalies (unusual outbound destination, off-hours volume spikes, C2 beacon timing from the store WAN IP). Per-device PCI controls (cardholder data isolation, device-level segmentation) require in-store endpoint controls and ISE micro-segmentation, not SNA network flow analytics.</p></div>
+      <div class="stack-telem"><strong>Telemetry:</strong> NetFlow from 128T SD-WAN hub controllers at RI One (primary, eastern stores) and Shea DC (primary, western stores) &middot; Source IP = store WAN/SD-WAN tunnel IP &middot; Internal 172.16&ndash;172.31.x device IPs permanently masked by PAT and will never appear in this telemetry</div>
+    </div>
+
+    <div class="stack s4">
+      <div class="stack-hdr">
+        <span class="stack-num">Stack 4</span>
+        <span class="stack-title">Common COLO</span>
+        <span class="pill p4">2,455 subnets</span>
+        <span class="pill p4">COLO domain</span>
+        <span class="pill pgo">ODID/VRF required</span>
+      </div>
+      <div class="stack-body">Switch COLO fabric: Las Vegas NV (The Core Campus), Atlanta GA (The Keep Campus), Sparks NV (Switch TRE). Physical co-location facilities carrying both CVS and Aetna workloads across separate routing partitions (VRFs). Las Vegas Switch Colo confirmed to carry four heritage types simultaneously (CVS, AETNA, Caremark/CVS, SWITCH) &mdash; the ODID/VRF requirement is not precautionary, it is mandatory. Hillsboro OR carries AETNA+SWITCH heritage. COLO is the interconnect zone between CVS and Aetna routing domains.</div>
+      <div class="stack-telem"><strong>Telemetry:</strong> Flexible NetFlow per-VRF at Switch COLO fabric switches &middot; ODID=CVS-VRF / ODID=AETNA-VRF mandatory before FC deployment &middot; Physical FC appliances at LV Switch, ATL Switch, Sparks TRE &middot; Distinct from Stack 5 &mdash; no Telemetry Broker involvement</div>
+    </div>
+
+    <div class="stack s5">
+      <div class="stack-hdr">
+        <span class="stack-num">Stack 5</span>
+        <span class="stack-title">Cloud</span>
+        <span class="pill p5">1,347 subnets</span>
+        <span class="pill p5">Azure · GCP · AWS</span>
+        <span class="pill p5">Telemetry Broker</span>
+      </div>
+      <div class="stack-body">Cloud infrastructure: Azure (CVS and Aetna paths separately), GCP US-East4 (CVS and Aetna BU allocations), AWS, and Internet-Facing egress subnets. Cloud IP addresses are BU-allocated and must be derived from hostname context using CCD Platform hostname_translate.py rules &mdash; never from the server owner field. GCP space contains 12 confirmed IP collisions between CVS and Aetna BU allocations requiring Telemetry Broker transformation rules to enforce BU-tag-based domain scoping before IPFIX forward.</div>
+      <div class="stack-telem"><strong>Telemetry:</strong> Cisco Telemetry Broker pulls AWS VPC flow logs (S3) + Azure NSG logs (Blob Storage) &rarr; transforms to IPFIX &rarr; virtual FC &middot; Vegas PDC&rarr;Azure Zerto DR traffic included in CVS Azure path &middot; GCP BU-tag scoping required in Telemetry Broker transformation rules for the 12 GCP collision CIDRs</div>
+    </div>
+  </div>
+
+  <div class="call ct" style="margin-top:8px">
+    <p><strong>Cross-stack correlation architecture:</strong> Each SNA Manager is an independent data silo for its routing domain. Cross-domain threat correlation &mdash; lateral movement that crosses from CVS to Aetna via the interconnect, or an attacker pivoting from retail WAN to enterprise DC &mdash; is handled by Cisco XDR above the SNA layer. XDR correlates by entity (user identity from ISE, hostname, certificate fingerprint) rather than by IP address, which sidesteps the IP overlap problem entirely at the correlation layer. Splunk, receiving domain-tagged events from all five stacks, provides the historical cross-domain hunting capability.</p>
+  </div>
+</section>
+
+<!-- DETECTION COVERAGE -->
+<section id="detection">
+  <div class="ey">Section 2</div>
+  <h2>Detection coverage model &mdash;<br>what SNA sees, and what it does not</h2>
+  <p class="lead">Transparent detection coverage assessment is essential for setting accurate expectations with the SOC and with audit. SNA provides strong behavioral detection across Stacks 1, 2, and 5. Stack 3 (Retail) is constrained by the SNAT boundary. The east-west L7 visibility gap applies to all stacks in the absence of traffic taps or DPI sensors.</p>
+
+  <h3 style="margin-top:20px;margin-bottom:10px">Detection capability by threat category</h3>
+  <div style="border:1px solid var(--light-gray);border-radius:4px;overflow:hidden">
+    <div style="display:flex;border-bottom:1px solid var(--light-gray)">
+      <div style="width:180px;flex-shrink:0;padding:7px 12px;background:var(--red);color:white;font-size:11px;font-weight:700">Threat category</div>
+      <div style="flex:1;display:flex">
+        <div style="flex:1;padding:7px 8px;background:var(--red);color:white;font-size:11px;font-weight:700;text-align:center;border-left:1px solid rgba(255,255,255,0.2)">Stack 1 CVS</div>
+        <div style="flex:1;padding:7px 8px;background:var(--red);color:white;font-size:11px;font-weight:700;text-align:center;border-left:1px solid rgba(255,255,255,0.2)">Stack 2 Aetna</div>
+        <div style="flex:1;padding:7px 8px;background:var(--red);color:white;font-size:11px;font-weight:700;text-align:center;border-left:1px solid rgba(255,255,255,0.2)">Stack 3 Retail</div>
+        <div style="flex:1;padding:7px 8px;background:var(--red);color:white;font-size:11px;font-weight:700;text-align:center;border-left:1px solid rgba(255,255,255,0.2)">Stack 4 COLO</div>
+        <div style="flex:1;padding:7px 8px;background:var(--red);color:white;font-size:11px;font-weight:700;text-align:center;border-left:1px solid rgba(255,255,255,0.2)">Stack 5 Cloud</div>
+      </div>
+    </div>
+    <div class="det-row"><div class="det-threat">PHI / PBM exfiltration</div><div class="det-cell good">Strong</div><div class="det-cell good">Strong</div><div class="det-cell partial">Store-level only</div><div class="det-cell partial">Transit flows</div><div class="det-cell good">Strong</div></div>
+    <div class="det-row"><div class="det-threat">Ransomware precursor (lateral movement / sweep)</div><div class="det-cell good">Strong</div><div class="det-cell good">Strong</div><div class="det-cell limited">WAN only (SNAT)</div><div class="det-cell partial">Limited</div><div class="det-cell partial">Limited</div></div>
+    <div class="det-row"><div class="det-threat">C2 beaconing (ETA)</div><div class="det-cell good">Strong</div><div class="det-cell good">Strong</div><div class="det-cell partial">Store aggregate</div><div class="det-cell partial">Partial</div><div class="det-cell good">Strong</div></div>
+    <div class="det-row"><div class="det-threat">Insider threat / identity abuse</div><div class="det-cell good">Strong (ISE)</div><div class="det-cell good">Strong (ISE)</div><div class="det-cell limited">Not viable (SNAT)</div><div class="det-cell limited">Limited</div><div class="det-cell partial">Partial</div></div>
+    <div class="det-row"><div class="det-threat">Data exfiltration (bulk transfer)</div><div class="det-cell good">Strong</div><div class="det-cell good">Strong</div><div class="det-cell partial">Store-level only</div><div class="det-cell partial">Partial</div><div class="det-cell good">Strong</div></div>
+    <div class="det-row"><div class="det-threat">East-west L7 payload (intra-DC)</div><div class="det-cell limited">NetFlow only*</div><div class="det-cell limited">NetFlow only*</div><div class="det-cell limited">Not visible (SNAT)</div><div class="det-cell limited">NetFlow only*</div><div class="det-cell limited">VPC logs only</div></div>
+    <div class="det-row" style="border:none"><div class="det-threat">IoT / unmanaged device profiling</div><div class="det-cell partial">ISE passive</div><div class="det-cell partial">ISE passive</div><div class="det-cell limited">Not visible (SNAT)</div><div class="det-cell limited">Limited</div><div class="det-cell na">&mdash;</div></div>
+  </div>
+  <p style="font-size:11px;color:var(--mid-gray);margin-top:6px">* East-west L7 payload gap: internal DC traffic traversing Cisco switches is NetFlow metadata only. No physical taps are deployed. Mitigations: ISE micro-segmentation, PAN-OS App-ID at firewall insertion points, Cisco XDR endpoint correlation for process-level context.</p>
+
+  <div class="g2" style="margin-top:20px">
+    <div>
+      <h3>Primary detection use cases &mdash; CVS Health threat landscape</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+        <div style="padding:12px 14px;border-left:3px solid var(--red);background:var(--off-white);border-radius:0 3px 3px 0">
+          <div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:4px">Healthcare data exfiltration</div>
+          <div style="font-size:12px;color:var(--dark-gray)">Healthcare is the #1 ransomware target and the #1 data breach sector. CVS holds member PHI (Aetna Stack 2), PBM prescription records (CVS Stack 1), and claims data. SNA behavioral baselining detects bulk transfer anomalies, unusual destination countries, off-hours patterns, and Talos TI matches against known exfiltration infrastructure.</div>
+        </div>
+        <div style="padding:12px 14px;border-left:3px solid var(--red);background:var(--off-white);border-radius:0 3px 3px 0">
+          <div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:4px">Ransomware pre-deployment detection</div>
+          <div style="font-size:12px;color:var(--dark-gray)">SNA detects the reconnaissance and lateral movement patterns that precede encryption events: SMB/RDP volume spikes, port sweep anomalies, worm propagation signatures (MITRE T1570), and service account connection anomalies. Detecting these in Stacks 1 and 2 is the primary ransomware use case &mdash; stopping the kill chain before payload deployment.</div>
+        </div>
+        <div style="padding:12px 14px;border-left:3px solid var(--blue);background:var(--off-white);border-radius:0 3px 3px 0">
+          <div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:4px">Encrypted C2 detection (ETA)</div>
+          <div style="font-size:12px;color:var(--dark-gray)">Cisco ETA analyzes TLS handshake metadata, certificate chain properties, and beacon timing patterns without decrypting traffic. Critical in a no-tap environment where L7 payload inspection is unavailable. Supplemented by PAN-OS DNS Security and App-ID at firewall insertion points.</div>
+        </div>
+        <div style="padding:12px 14px;border-left:3px solid var(--blue);background:var(--off-white);border-radius:0 3px 3px 0">
+          <div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:4px">Retail store anomaly detection (Stack 3)</div>
+          <div style="font-size:12px;color:var(--dark-gray)">Store WAN IP behavioral baselines detect: unusual egress volume (possible POS compromise), atypical destination (possible C2), off-hours communication bursts, and store-to-enterprise tunneling anomalies. Detection operates at the per-store aggregate level &mdash; individual device-level visibility is not available due to SNAT.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>SNA detection capability by stack</h3>
+      <div style="margin-top:10px;border:1px solid var(--light-gray);border-radius:4px;padding:14px 16px">
+        <div class="brow"><span class="blbl">Stack 1 CVS Enterprise</span><div class="btrack"><div class="bfill br2" style="width:93%"></div></div><span class="bval" style="color:var(--red)">9.3</span></div>
+        <div class="brow"><span class="blbl">Stack 2 Aetna Enterprise</span><div class="btrack"><div class="bfill bb2" style="width:93%"></div></div><span class="bval" style="color:var(--blue)">9.3</span></div>
+        <div class="brow"><span class="blbl">Stack 3 Retail (SNAT)</span><div class="btrack"><div class="bfill bin" style="width:52%"></div></div><span class="bval" style="color:var(--indigo)">5.2</span></div>
+        <div class="brow"><span class="blbl">Stack 4 COLO</span><div class="btrack"><div class="bfill" style="width:72%;background:var(--dark-gray)"></div></div><span class="bval" style="color:var(--dark-gray)">7.2</span></div>
+        <div class="brow"><span class="blbl">Stack 5 Cloud</span><div class="btrack"><div class="bfill bg2" style="width:84%"></div></div><span class="bval" style="color:var(--green)">8.4</span></div>
+        <p style="font-size:11px;color:var(--mid-gray);margin-top:10px">Stack 3 score reflects the fundamental SNAT constraint &mdash; not a deployment quality issue. In-store device-level threat detection requires complementary endpoint controls (ISE, EDR) that operate inside the SNAT boundary.</p>
+      </div>
+
+      <h3 style="margin-top:18px">The Cisco Talos intelligence advantage</h3>
+      <p style="font-size:13px;color:var(--dark-gray);margin-top:8px">Cisco Talos is one of the largest commercial threat intelligence operations globally. SNA integrates Talos TI across all five stacks, providing real-time correlation against known C2 infrastructure, malware distribution networks, and threat actor attribution. In a healthcare environment targeted by nation-state actors and ransomware groups (LockBit, ALPHV/BlackCat, Hive), Talos TI coverage is a material security advantage. PAN-OS Unit 42 TI provides a second independent TI layer at the firewall insertion points across all stacks.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TELEMETRY ARCHITECTURE -->
+<section id="telemetry">
+  <div class="ey">Section 3</div>
+  <h2>Telemetry architecture &mdash;<br>zero taps, complete routing domain coverage</h2>
+  <p class="lead">CVS Health&rsquo;s 100% Cisco network infrastructure, mixed PAN-OS and Cisco Firepower firewall estate, and 128T SD-WAN retail fabric provide a comprehensive native telemetry ecosystem. Physical traffic taps are not required, not available, and not a deployment dependency for any of the five stacks.</p>
+
+  <table>
+    <thead><tr><th>Telemetry source</th><th>Stacks fed</th><th>Collection mechanism</th><th>Key value for SNA</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Cisco switches (core/dist/access)</strong></td><td><span class="pill p1">S1</span> <span class="pill p2">S2</span> <span class="pill p4">S4</span></td><td>Unsampled NetFlow v9/IPFIX natively<br><span style="font-size:11px;color:var(--red)">Sampled NetFlow (1:1000) is explicitly insufficient for security outcomes &mdash; enforce 1:1 at all L3 boundaries</span></td><td style="font-size:12px">Full IP conversation record. Primary enterprise host telemetry source.</td></tr>
+      <tr><td><strong>Cisco Firepower (FTD)</strong></td><td><span class="pill p1">S1</span> <span class="pill p2">S2</span></td><td>Connection logs direct to Flow Collector &mdash; 100K eps, 30+ days</td><td style="font-size:12px">Application, user (via ISE), bytes, duration per session. First-class SNA integration.</td></tr>
+      <tr><td><strong>Palo Alto NGFW (PAN-OS)</strong></td><td><span class="pill p1">S1</span> <span class="pill p2">S2</span></td><td>IPFIX export with App-ID (3,000+ L7 applications) + User-ID binding</td><td style="font-size:12px">Primary L7 enrichment source in a no-tap environment. App-ID fills the NetFlow L7 depth gap at firewall insertion points.</td></tr>
+      <tr><td><strong>Cisco ISE (pxGrid)</strong></td><td><span class="pill p1">S1</span> <span class="pill p2">S2</span></td><td>pxGrid integration per-stack &mdash; separate domain-scoped subscription per Manager</td><td style="font-size:12px">User-to-IP binding. Device identity. Passive profiling via DHCP/RADIUS/CDP/LLDP. Enables user behavioral analytics.</td></tr>
+      <tr><td><strong>Cisco Secure Client NVM</strong></td><td><span class="pill p1">S1</span> <span class="pill p2">S2</span></td><td>Host-based flow records from managed endpoints including remote workers (VPN)</td><td style="font-size:12px">Off-network visibility. Process-level connection metadata unavailable in NetFlow.</td></tr>
+      <tr><td><strong>128T SD-WAN hub controllers</strong></td><td><span class="pill p3">S3</span></td><td>NetFlow from hub controller at RI One (East) and Shea DC (West)</td><td style="font-size:12px">Store WAN/tunnel IP as source. One effective host per store. Internal device IPs permanently masked by PAT.</td></tr>
+      <tr><td><strong>Cisco Telemetry Broker &rarr; AWS VPC / Azure NSG</strong></td><td><span class="pill p5">S5</span></td><td>Broker pulls VPC/NSG flow logs from S3/Blob &rarr; transforms to IPFIX &rarr; virtual FC</td><td style="font-size:12px">Cloud workload visibility. GCP BU-tag scoping required for 12 collision CIDRs.</td></tr>
+      <tr><td><strong>Switch COLO Flexible NetFlow (per-VRF)</strong></td><td><span class="pill p4">S4</span></td><td>Flexible NetFlow with ODID tagging per heritage VRF at COLO fabric switches</td><td style="font-size:12px">Only viable telemetry source at COLO given multi-heritage fabric. ODID=CVS-VRF / ODID=AETNA-VRF mandatory prerequisite.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- IDENTITY LAYER -->
+<section id="identity">
+  <div class="ey">Section 4</div>
+  <h2>Identity &amp; context layer</h2>
+  <p class="lead">Network flow data alone identifies hosts by IP address. The identity layer binds those IP addresses to users, devices, and roles &mdash; transforming raw flow anomalies into actionable security events. In a healthcare environment, knowing that an unusual data transfer originates from a specific nurse&rsquo;s workstation versus an application server is the difference between a true positive and noise.</p>
+
+  <div class="g3" style="margin-top:20px">
+    <div class="card">
+      <h4>Cisco ISE pxGrid</h4>
+      <h3>User &amp; device identity binding</h3>
+      <p style="font-size:13px">ISE pxGrid provides real-time user-to-IP mapping from 802.1X authentication, RADIUS accounting, and DHCP. Each SNA Manager connects to a <strong>domain-scoped pxGrid subscription</strong> &mdash; Stack 1 (CVS) Manager must not receive Aetna user-IP mappings, and vice versa. Incorrect cross-domain pxGrid scope is equivalent to the IP collision problem applied to identity.</p>
+      <ul style="list-style:none;font-size:12px;color:var(--dark-gray);margin-top:8px;display:flex;flex-direction:column;gap:4px">
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>Real-time user-to-IP binding in SNA flows</li>
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>Device type and posture classification</li>
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>ISE &rarr; SNA detection &rarr; ISE quarantine enforcement loop</li>
+        <li style="display:flex;gap:8px"><span style="color:var(--red)">&#10007;</span>Not available for Stack 3 Retail (SNAT masks device identity)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>PAN-OS User-ID</h4>
+      <h3>Firewall-layer identity supplement</h3>
+      <p style="font-size:13px">PAN-OS firewalls provide User-ID binding at the firewall insertion point, complementing ISE for non-802.1X-authenticated traffic. When PAN-OS IPFIX with App-ID is exported to SNA Flow Collectors, user context from PAN-OS User-ID is included in the flow record, enriching SNA behavioral baselines at CVS and Aetna perimeters.</p>
+      <ul style="list-style:none;font-size:12px;color:var(--dark-gray);margin-top:8px;display:flex;flex-direction:column;gap:4px">
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>User-IP binding at PAN-OS egress and inter-zone firewall points</li>
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>App-ID provides L7 application context to SNA flows</li>
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>Supplements ISE for guest, contractor, and IoT segments</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Encrypted Traffic Analytics (ETA)</h4>
+      <h3>TLS threat detection without decryption</h3>
+      <p style="font-size:13px">ETA is critical in a no-tap environment where L7 payload inspection is not available. ETA analyzes TLS handshake metadata (cipher suite, certificate chain, SNI) and flow behavioral patterns (burst timing, session length distribution) to classify encrypted sessions as benign or malicious without decryption, preserving PHI and member data privacy.</p>
+      <ul style="list-style:none;font-size:12px;color:var(--dark-gray);margin-top:8px;display:flex;flex-direction:column;gap:4px">
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>TLS certificate fingerprinting against Talos known-bad infrastructure</li>
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>Beacon timing pattern detection in encrypted sessions</li>
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>DGA (domain generation algorithm) detection via DNS flow patterns</li>
+        <li style="display:flex;gap:8px"><span style="color:var(--green)">&#10003;</span>No PHI exposure &mdash; no decryption required</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATION -->
+<section id="integration">
+  <div class="ey">Section 5</div>
+  <h2>Integration architecture &mdash;<br>SNA as the network telemetry hub</h2>
+  <p class="lead">SNA does not operate in isolation. Each of the five stacks feeds into a common correlation and response layer. SNA is the network telemetry source; Cisco XDR is the cross-domain correlation engine; Splunk is the long-term retention and SOC hunt platform; ISE is the enforcement layer.</p>
+
+  <div style="margin-top:20px;border:1px solid var(--light-gray);border-radius:4px;overflow:hidden">
+    <div style="background:var(--dark-gray);padding:10px 16px;font-size:11px;font-weight:700;color:white;letter-spacing:.05em;text-transform:uppercase">Integration architecture &mdash; data flows</div>
+    <div style="padding:16px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 14px;background:var(--off-white);border-radius:3px">
+          <div style="width:220px;flex-shrink:0;font-weight:600;font-size:13px">Five SNA Managers</div>
+          <div style="color:var(--red);font-size:18px">&rarr;</div>
+          <div style="font-size:12px;color:var(--dark-gray)">Each Manager forwards enriched flow records (with host groups, user identity, threat scores, behavioral flags) via syslog/API. Domain tag is preserved on every forwarded event.</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 14px;background:var(--off-white);border-radius:3px">
+          <div style="width:220px;flex-shrink:0;font-weight:600;font-size:13px">Cisco XDR</div>
+          <div style="color:var(--red);font-size:18px">&rarr;</div>
+          <div style="font-size:12px;color:var(--dark-gray)">SNA detections from all five stacks feed XDR. XDR correlates by entity &mdash; user identity, hostname, certificate fingerprint &mdash; not by IP address. A network-based lateral movement indicator is correlated with endpoint (Secure Endpoint) and email signals to form an incident. Cross-stack threat correlation (CVS &harr; Aetna) is viable in XDR because entity-based correlation sidesteps the IP overlap problem.</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 14px;background:var(--off-white);border-radius:3px">
+          <div style="width:220px;flex-shrink:0;font-weight:600;font-size:13px">Splunk SIEM</div>
+          <div style="color:var(--red);font-size:18px">&rarr;</div>
+          <div style="font-size:12px;color:var(--dark-gray)">All five stacks forward domain-tagged events to Splunk. Stack context (Stack 1&ndash;5) is a queryable field on every event. Provides long-term retention for forensic investigation, cross-domain hunt workflows, and SOC 2 evidence collection. SNA replaces raw NetFlow ingestion in Splunk with structured, enriched, annotated flow data.</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 14px;background:var(--off-white);border-radius:3px">
+          <div style="width:220px;flex-shrink:0;font-weight:600;font-size:13px">Cisco ISE enforcement</div>
+          <div style="color:var(--red);font-size:18px">&rarr;</div>
+          <div style="font-size:12px;color:var(--dark-gray)">When SNA detects a compromised host in Stack 1 or Stack 2, ISE pxGrid enables automated quarantine &mdash; changing the host&rsquo;s network access policy in real time. The network becomes self-defending: detection in SNA triggers containment in ISE without manual firewall rule changes. Runbook required: SNA detection severity threshold &rarr; automated ISE policy change &rarr; SOC notification &rarr; analyst review within defined SLA.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA GOVERNANCE -->
+<section id="governance">
+  <div class="ey">Section 6</div>
+  <h2>CCD Platform as the governance foundation &mdash;<br>SNA configuration is derived, never manual</h2>
+  <p class="lead">The most common cause of SNA deployment failure in complex environments is host group misconfiguration: subnets assigned to the wrong stack, overlapping CIDRs in host group definitions, or inferred subnet locations that place a CVS subnet in the Aetna Manager. CVS Health&rsquo;s CCD Platform eliminates this risk by providing three authoritative datasets from which all SNA host group configuration is derived.</p>
+
+  <div class="g3" style="margin-top:20px">
+    <div class="card accent">
+      <h4>all_IP_networks v3.78</h4>
+      <h3>Authoritative enterprise subnet registry</h3>
+      <p style="font-size:13px">20,942 subnets. Every subnet has a verified <span class="code">CANONICAL_LOCATION</span>, <span class="code">ROUTING_DOMAIN</span>, and <span class="code">HERITAGE</span> field. The ROUTING_DOMAIN field is the direct input for stack assignment. The <span class="code">DATA_QUALITY</span> field (Authoritative vs Inferred) drives host group naming &mdash; authoritative and inferred subnets go to separate host group tiers, enabling SOC analysts to weight alert context appropriately.</p>
+      <div class="call cr" style="margin-top:8px"><p><strong>Non-negotiable rule:</strong> No subnet enters an SNA host group without a verified <span class="code">CANONICAL_LOCATION</span> in the location_master. Update order: LM &rarr; IPAM &rarr; SNA configuration. The Observed&rarr;Inferred DATA_QUALITY patch (open since v3.71) must be resolved before Stack 1 production baselining begins.</p></div>
+    </div>
+    <div class="card accent">
+      <h4>location_master v5.9g</h4>
+      <h3>Authoritative site + FC anchor registry</h3>
+      <p style="font-size:13px">11,526 sites with verified SITE_CODEs, NET_TYPE, HERITAGE, and LOCATION_TYPE. All proposed Flow Collector deployment sites are confirmed present in the LM with correct attributes. The LM is the input for FC host group naming, SITE_CODE-based host group construction, and the retail Store WAN IP &rarr; SITE_CODE mapping for Stack 3. One unplanned CVS DC (Wood Dale IL, US_WOI_IL_DC) requires Stack 1 architecture assessment.</p>
+    </div>
+    <div class="card accent">
+      <h4>retail_networks v2.8</h4>
+      <h3>Stack 3 store WAN IP reference</h3>
+      <p style="font-size:13px">294,341 device records across 9,144 stores. For SNA purposes: the device-level /32 IPs are store-internal and irrelevant (SNAT-masked). The dataset provides the canonical SITE_CODE, physical address, and store metadata required to name and document Stack 3 host groups. The store WAN/tunnel IPs (SD-WAN WAN-side interface addresses) are the actual host identifiers in Stack 3 &mdash; these must be sourced from the 128T SD-WAN controller inventory, not retail_networks.</p>
+    </div>
+  </div>
+
+  <div class="call ct" style="margin-top:16px">
+    <p><strong>CCD Platform governance rule for SNA configuration updates:</strong> When any CCD Platform dataset is updated (IPAM version increment, new LM entries, retail store additions), the SNA host group configuration for affected stacks must be reviewed and updated before the next IPAM cross-check cycle. The stack assignment for any subnet is governed by its <span class="code">ROUTING_DOMAIN</span> value in all_IP_networks &mdash; this is not a field that can be overridden by server owner, application team, or manual estimate. Any proposed IPAM update that changes a subnet&rsquo;s ROUTING_DOMAIN must be flagged for SNA host group review as part of the change governance process.</p>
+  </div>
+
+  <h3 style="margin-top:20px;margin-bottom:10px">Stack assignment rules (authoritative)</h3>
+  <table>
+    <thead><tr><th>ROUTING_DOMAIN value</th><th>SNA stack</th><th>Manager</th><th>FC type</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">Internal-PBM</td><td><span class="pill p1">Stack 1 CVS Enterprise</span></td><td>SNA-MGR-CVS</td><td style="font-size:12px">Physical FC at Shea DC, RI One, 2100 Highland, Wood Dale IL</td></tr>
+      <tr><td class="mono">Internal-Retail</td><td><span class="pill p3">Stack 3 CVS Retail</span></td><td>SNA-MGR-RETAIL</td><td style="font-size:12px">NetFlow FC at 128T SD-WAN hub controllers (RI One, Shea)</td></tr>
+      <tr><td class="mono">Partner · Offshore</td><td><span class="pill p1">Stack 1 CVS Enterprise</span></td><td>SNA-MGR-CVS</td><td style="font-size:12px">As per CVS enterprise FC scope</td></tr>
+      <tr><td class="mono">Internal-HCB</td><td><span class="pill p2">Stack 2 Aetna Enterprise</span></td><td>SNA-MGR-AETNA</td><td style="font-size:12px">Physical FC at MID, WDC, Phoenix Aetna DC, Woodbridge NJ DR</td></tr>
+      <tr><td class="mono">COLO</td><td><span class="pill p4">Stack 4 Common COLO</span></td><td>SNA-MGR-COLO</td><td style="font-size:12px">Physical FC at LV Switch, ATL Switch, Sparks TRE (ODID-scoped)</td></tr>
+      <tr><td class="mono">Cloud-Azure · Cloud-GCP · Cloud-AWS · Internet-Facing</td><td><span class="pill p5">Stack 5 Cloud</span></td><td>SNA-MGR-CLOUD</td><td style="font-size:12px">Virtual FC via Cisco Telemetry Broker</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="ey">Section 7</div>
+  <h2>Phased deployment roadmap</h2>
+  <p class="lead">Stacks deploy sequentially. Each stack reaches operational maturity &mdash; baseline establishment, alert tuning, SOC workflow integration &mdash; before the next stack begins. Cross-stack XDR correlation activates only after all five stacks are live. The CCD Platform IPAM and location_master are validated against the SNA configuration before each stack goes live.</p>
+
+  <div class="phase-grid">
+    <div class="phase">
+      <div class="p-dot"></div>
+      <div class="p-label">Phase 01 &middot; 0&ndash;60 days</div>
+      <div class="p-title">Stack 1 &mdash; CVS Enterprise</div>
+      <ul>
+        <li>SNA-MGR-CVS + Data Store deployment</li>
+        <li>FC-CVS-DC ×4 (Shea, RI One, 2100, Wood Dale)</li>
+        <li>FC-CVS-INET ×3 (one per CVS egress node)</li>
+        <li>Unsampled NetFlow all CVS L3 boundaries</li>
+        <li>FTD connection log integration</li>
+        <li>ISE pxGrid &mdash; CVS scope only</li>
+        <li>PAN-OS IPFIX with App-ID at CVS perimeter</li>
+        <li>Validate: 0 sampled NetFlow sources</li>
+        <li>Baseline CVS DC host group profiles (30 days)</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="p-dot"></div>
+      <div class="p-label">Phase 02 &middot; 60&ndash;120 days</div>
+      <div class="p-title">Stacks 2 &amp; 3 &mdash; Aetna + Retail</div>
+      <ul>
+        <li>SNA-MGR-AETNA + Data Store deployment</li>
+        <li>FC-AETNA-DC ×3 (MID, Windsor, Phoenix)</li>
+        <li>FC-AETNA-INET ×2</li>
+        <li>ISE pxGrid &mdash; Aetna scope (separate subscription)</li>
+        <li>SNA-MGR-RETAIL + Data Store deployment</li>
+        <li>FC-RETAIL at RI One + Shea 128T hub controllers</li>
+        <li>Stack 3 host groups: RETAIL-[SITE_CODE] using store WAN IPs</li>
+        <li>Validate: zero cross-stack IP leakage between S1/S2</li>
+        <li>Talos TI activation on all three active stacks</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="p-dot"></div>
+      <div class="p-label">Phase 03 &middot; 120&ndash;180 days</div>
+      <div class="p-title">Stacks 4 &amp; 5 &mdash; COLO + Cloud</div>
+      <ul>
+        <li>Flexible NetFlow per-VRF at Switch COLO LV + ATL</li>
+        <li>ODID=CVS-VRF / ODID=AETNA-VRF &mdash; hard prereq</li>
+        <li>SNA-MGR-COLO + Data Store deployment</li>
+        <li>FC-COLO at LV Switch, ATL Switch, Sparks TRE</li>
+        <li>Cisco Telemetry Broker: AWS VPC + Azure NSG</li>
+        <li>GCP BU-tag scoping rules in Telemetry Broker</li>
+        <li>SNA-MGR-CLOUD + virtual FC deployment</li>
+        <li>Cisco XDR integration &mdash; all five stacks</li>
+        <li>Cross-stack entity correlation activated in XDR</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="p-dot"></div>
+      <div class="p-label">Phase 04 &middot; 180+ days</div>
+      <div class="p-title">Tuning &amp; operational maturity</div>
+      <ul>
+        <li>Splunk &mdash; all five stacks, domain tags on events</li>
+        <li>ISE quarantine runbook per stack (S1 + S2)</li>
+        <li>SOC 2 control evidence mapping &mdash; per stack</li>
+        <li>ETA tuning per-stack egress traffic profiles</li>
+        <li>Cross-stack XDR hunt playbooks</li>
+        <li>Annual IPAM / stack assignment review</li>
+        <li>SNA host group sync to IPAM update cycle</li>
+        <li>Stack 3 retail baseline maturity review (90 days post-live)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SUCCESS CRITERIA -->
+<section id="success">
+  <div class="ey">Section 8</div>
+  <h2>Success criteria &amp; operating metrics</h2>
+
+  <div class="g2" style="margin-top:16px">
+    <div>
+      <h3>Technical deployment criteria</h3>
+      <table style="margin-top:8px">
+        <thead><tr><th>Criterion</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td style="font-size:12px">Cross-stack IP collision in host groups</td><td class="mg">0 occurrences</td></tr>
+          <tr><td style="font-size:12px">Sampled NetFlow sources in production stacks</td><td class="mg">0 (enforce 1:1 everywhere)</td></tr>
+          <tr><td style="font-size:12px">DATA_QUALITY=Inferred subnets in host groups without tier flag</td><td class="mg">0 unlabeled</td></tr>
+          <tr><td style="font-size:12px">Stack 3 retail host groups using /26 internal LAN blocks</td><td class="mg">0 (store WAN IPs only)</td></tr>
+          <tr><td style="font-size:12px">COLO FCs without ODID validation</td><td class="mg">0 in production</td></tr>
+          <tr><td style="font-size:12px">SNA stack configuration drift vs IPAM</td><td class="mg">Review within 5 business days of any IPAM update</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Operational detection criteria (at maturity)</h3>
+      <table style="margin-top:8px">
+        <thead><tr><th>Metric</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td style="font-size:12px">Detection rate on SOC-controlled red team exercises (S1 + S2)</td><td style="font-size:12px;color:var(--green)">≥ 85%</td></tr>
+          <tr><td style="font-size:12px">False positive rate in production alerts (90 days post-baseline)</td><td style="font-size:12px;color:var(--green)">&lt; 10%</td></tr>
+          <tr><td style="font-size:12px">Mean time to detect on simulated lateral movement (S1)</td><td style="font-size:12px;color:var(--green)">&lt; 15 minutes</td></tr>
+          <tr><td style="font-size:12px">ISE automated quarantine round-trip (detect &rarr; contain)</td><td style="font-size:12px;color:var(--green)">&lt; 2 minutes (S1 + S2)</td></tr>
+          <tr><td style="font-size:12px">Cross-stack correlation incidents in XDR (monthly)</td><td style="font-size:12px;color:var(--dark-gray)">Baseline TBD at 90 days post Phase 3</td></tr>
+          <tr><td style="font-size:12px">SOC 2 network monitoring controls with SNA evidence</td><td style="font-size:12px;color:var(--green)">100% of applicable controls covered</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="call cg" style="margin-top:16px">
+    <p><strong>Compliance alignment:</strong> SNA deployment produces direct evidence for HIPAA Technical Safeguard requirements (audit controls, automatic logoff monitoring), PCI DSS Requirement 10 (log and monitor all access), and SOC 2 CC7.2 (monitor system components for anomalies). The five-stack architecture, with domain-accurate behavioral baselines, enables point-in-time attestation that behavioral anomaly detection was active for specific subnet ranges &mdash; a capability unavailable with a single corrupted-baseline Manager deployment.</p>
+  </div>
+</section>
+
+<!-- PREREQUISITES -->
+<section id="prereqs">
+  <div class="ey">Section 9 &mdash; Action items</div>
+  <h2>Prerequisites &amp; open items before FC deployment</h2>
+  <p style="margin-bottom:16px">Eight items require resolution. The three CRIT items are hard blockers &mdash; deploying without them reintroduces the architectural problems the five-stack model was designed to solve.</p>
+
+  <div class="card">
+    <div class="req">
+      <span class="req-badge crit-badge">CRIT-1</span>
+      <div class="req-text"><strong>COLO VRF-scoped Flexible NetFlow at LV Switch &mdash; Stack 4 prerequisite</strong><br>Las Vegas Switch Colo carries CVS, AETNA, Caremark/CVS, and SWITCH heritage simultaneously. Configure Flexible NetFlow per-VRF with ODID tagging (ODID=CVS-VRF / ODID=AETNA-VRF) at all Switch COLO fabric switches. Validate ODID is present on exported records before activating FC-COLO. Non-negotiable &mdash; deploying without it merges CVS and Aetna flows in Stack 4.</div>
+    </div>
+    <div class="req">
+      <span class="req-badge crit-badge">CRIT-2</span>
+      <div class="req-text"><strong>Stack 3 Retail &mdash; SNA host model must use store WAN IPs, not internal device IPs</strong><br>All retail stores are SNAT-masked at the 128T router edge. Internal store device IPs (172.16&ndash;172.31.x/26, POS, Rx, workstations) are never visible to enterprise NetFlow. Stack 3 SNA host groups must be defined as <span class="code">RETAIL-[SITE_CODE]</span> using the store WAN/tunnel IP sourced from the 128T SD-WAN controller inventory. The 294,341 device IP records in retail_networks v2.8 must not be added to Stack 3 host group configuration.</div>
+    </div>
+    <div class="req">
+      <span class="req-badge crit-badge">CRIT-3</span>
+      <div class="req-text"><strong>Exclude 11 retail /24 collision blocks from Stacks 1 and 2 enterprise host groups</strong><br>11 retail /24 parent blocks share identical CIDRs with enterprise subnets in Internal-PBM (3 blocks: 172.16.2.0/24, 172.16.7.0/24, 172.20.232.0/24) and Internal-HCB (8 blocks: 172.19.5.0/24, 172.19.16.0/24, 172.24.2.0/24, 172.28.1&ndash;3.0/24, 172.28.106.0/24, 172.31.224.0/24). These must be explicitly excluded from Stack 1 and Stack 2 host group definitions to prevent SNA from merging retail store traffic with enterprise DC traffic.</div>
+    </div>
+    <div class="req">
+      <span class="req-badge attn-badge">ATTN-4</span>
+      <div class="req-text"><strong>Wood Dale IL (US_WOI_IL_DC) &mdash; unplanned CVS DC requires Stack 1 FC assessment</strong><br>A fourth CVS DC site is present in location_master v5.9g but absent from the original Stack 1 architecture. Assess for dedicated FC or coverage under existing DC cluster. Confirm IPAM subnet count and include in Stack 1 host group configuration before go-live.</div>
+    </div>
+    <div class="req">
+      <span class="req-badge attn-badge">ATTN-5</span>
+      <div class="req-text"><strong>Internet egress FC model requires physical topology validation</strong><br>The IPAM shows only 16 Internet-Facing subnets anchored to RI One (CVS) plus 1 at Phoenix Aetna DC. The "3 CVS + 2 Aetna egress" collector model must be validated against actual border router topology before FC deployment.</div>
+    </div>
+    <div class="req">
+      <span class="req-badge attn-badge">ATTN-6</span>
+      <div class="req-text"><strong>GCP BU-tag scoping rules in Cisco Telemetry Broker &mdash; Stack 5 requirement</strong><br>12 confirmed IP collisions in GCP space (10.143.x, 10.149.x, 10.236.x) between CVS and Aetna BU allocations. Telemetry Broker transformation rules must enforce BU-tag-based domain scoping before IPFIX forward to Stack 5 FC. Cannot rely on IP alone to distinguish CVS vs Aetna cloud hosts in GCP.</div>
+    </div>
+    <div class="req">
+      <span class="req-badge attn-badge">ATTN-7</span>
+      <div class="req-text"><strong>Reserved address space in production (1.1.1.0 and 203.0.113.0) &mdash; IPAM hygiene flag</strong><br>Cloudflare anycast (1.1.1.0) and RFC 5737 TEST-NET (203.0.113.0) are in active use at Shea DC and Aetna MDC. Both appear in the IP collision inventory. Do not exclude from SNA host groups &mdash; they are active subnets. Flag for remediation in the next IPAM governance cycle.</div>
+    </div>
+    <div class="req" style="border:none">
+      <span class="req-badge attn-badge">ATTN-8</span>
+      <div class="req-text"><strong>Resolve Observed&rarr;Inferred DATA_QUALITY patch before Stack 1 baselining</strong><br>~8,400 subnets in Stacks 1 and 2 carry DATA_QUALITY=Inferred. Include in SNA host groups with distinct naming (e.g., <span class="code">CVS-DC-AUTH</span> vs <span class="code">CVS-DC-INFD</span>). Resolve the patch open since all_IP_networks v3.71 before Stack 1 behavioral baselining begins to prevent inferred subnets with incorrect ROUTING_DOMAIN attribution from appearing in the wrong stack.</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="fb">CVS Health Information Security &nbsp;|&nbsp; CCD Platform &nbsp;|&nbsp; Cisco SNA Vision &amp; Strategy</div>
+  <div class="fn">&copy; CVS Health and/or one of its affiliates. Confidential and proprietary. &middot; v1.0 &middot; 2026-05-19 &middot; DRAFT</div>
+</footer>
+
+</body>
+</html>
