@@ -1,0 +1,1178 @@
+Production 	172.19.32.0/23
+172.19.34.0/23
+172.19.36.0/24
+172.19.39.0/24 	172.28.32.0/23
+172.28.34.0/23
+172.28.36.0/24
+172.28.39.0/24 	Server Farms - private ranges will be assigned a public NAT address
+	206.213.240.0/24
+206.213.241.0/24
+206.213.253.0/24 	206.213.211.0/24
+206.213.212.0/24
+206.213.213.0/24 	F5 VIPs
+	206.213.252.0/24 	206.213.210.0/24 	Firewall/Switch/DNS Infrastructure
+			
+
+AETDMZ
+	157.121.36.0/25 	157.121.37.0/25 	Domain Controllers
+			
+Client Extension 	206.213.254.0/26
+206.213.254.128/26 	206.213.215.0/26
+206.213.215.128/26 	SDWAN, Meraki, Aruba, Aironet
+			
+QA DMZ 	172.19.40.0/23
+172.19.42.0/23
+172.19.44.0/24
+172.19.47.0/24 		Server Farms - private ranges will be assigned a public NAT address
+	206.213.243.0/24
+206.213.244.0/24
+206.213.246.0/24 		F5 VIPs
+	206.213.245.128/25 	  	Firewall/Switch/DNS Infrastructure
+	  	  	 
+AETDMZQ 	157.121.36.128/25 	157.121.37.128/25 	Domain Controllers
+			
+HFD Lab 	10.80.97.0/24
+10.80.98.0/24
+10.80.93.0/25
+10.80.93.192/25
+10.80.92.0/25 		Server Farms - no Internet Access
+	10.80.94.0/25 		SLB VIPs
+	  	  	 
+
+ 
+Phoenix 	PDC/CVTY Data Center 	  	Comments
+Production 	10.249.4.0/24 	  	DMZ
+	10.249.12.0/24 	  	DMZ
+	10.249.20.0/22 	  	DMZ
+	10.249.14.0/24 		DMZ
+	  	  	 
+Client VPN 	206.213.192.100/30 		part of PDC external /24
+	  	  	 
+
+ 
+
+      OpenStack on-perm External Cloud
+
+OpenStack 	Middletown Data Center 	Windsor Data Center 	Comments
+F5 VIPs 	206.213.233.0/24
+206.213.234.0/24 	206.213.223.0/24 	Tenant Public NATs
+	  	  	 
+Infra
+
+ 
+	172.16.36.0/24
+172.16.37.0/24
+172.16.38.0/24
+172.16.39.0/24 	172.16.52.0/24
+172.16.53.0/24
+172.16.54.0/24
+172.16.55.0/24 	Internal VIPs
+Service Domain
+ESX Management
+OpenStack Management
+Tenants 	172.16.40.0/21 	172.16.56.0/21 	Tenants
+	  	  	 
+
+ 
+
+      PCI Enclave
+
+PCI 	Middletown Data Center 	Windsor Data Center 	Comments
+Production 	167.69.28.0/22 	167.69.72.0/22 	App & Web Farms
+QA 	167.69.28.0/22 	  	App & Web Farms
+Dev 	  	167.69.72.0/22 	App & Web Farms
+	  	  	 
+
+ 
+
+      Special DMZ Network Address Assignments
+
+ 
+DMZ 	Middletown Data Center 	Windsor Data Center 	Comments
+TSOUT 	172.19.19.0/24 	  	 
+	  	  	 
+VDI (vmdmz) 	172.29.60.0/25 	  	VM Clients
+	  	  	 
+ASH 	172.26.24.0/22 	  	Aetna Student Health
+	  	  	 
+SecureWorks 	172.19.12.48/29 	172.28.12.48/29 	Dell Secure Works
+  	  	  	 
+ISBC 	172.19.12.32/29 	  	ACME Session Border Controller
+	  	172.28.12.88/29 	
+  	  	  	 
+VizNet 	172.27.0.0/16 		Guest Network
+	  	  	 
+
+ 
+      Non-Internet DMZ/Enclave Network Address Assignments
+
+ 
+DMZ 	Middletown Data Center 	Windsor Data Center 	Comments
+Affiliate 	172.31.0.0/16 	172.31.0.0/16 	Off Shore
+	206.213.205.0/24 	206.213.206.0/24 	Server Farms
+			
+ADD.net 	172.29.20.0/24
+172.29.21.0/24
+172.29.22.0/24
+206.213.251.216 (PAT) 	
+172.29.32.0/24
+206.213.209.216 (PAT) 	Server Farms
+			
+ECAN 	172.26.0.0/17 	172.26.144.0/22
+172.26.148.0/22
+172.26.152.0/22 	VM Clients
+			
+Ecomm 	206.213.201.0/24 	206.213.207.0/24 	Partner Network Devices
+	206.213.202.0/24
+206.213.203.0/24
+172.19.192.0/18 	206.213.208.0/25
+172.28.192.0/18 	Partner NATs
+			
+Mobile 	157.121.38.0/24 	157.121.39.0/24 	App Farm
+ 
+  	  	  	 
+Interoperability 	157.121.113.0/27
+157.121.113.32/27
+157.121.113.64/27 	167.69.113.128/27
+167.69.113.160/27
+167.69.113.192/27 	App Farm
+ 
+  	  	  	 
+SA DBAR 	  	 172.29.130.0/24 	SA DBAR
+  	  	  	 
+SIP Prod 	167.69.188.192/26 	167.69.190.192/26 	 
+	12.213.xxx.xxx 	12.213.xxx.xxx 	AT&T SIP Trunks
+			
+SIP Test 	167.69.189.192/26 	167.69.191.192/26 	 
+	12.194.xxx.xxx 	12.194.xxx.xxx 	AT&T SIP Trunks
+	  	  	 
+Telepresence 	  	32.243.110.48/28 	AT&T Telepresence
+	  	  	 
+ 
+
+      Public Routable Subnet Assignments
+
+ 
+Subnet 	Usage 	Servicing Device
+206.213.192.0/24 	PDC external subnet 	Firewalls
+  	  	 
+206.213.193.0/24 	PDC Office365 & Skype 	pdc-fw-services NAT pools, DNS NAT, Proxy NAT
+206.213.196.0/24 	MDC Office365 & Skype 	mid-fw-services NAT pools
+206.213.197.0/24 	WDC Office365 & Skype 	win-fw-services NAT pools
+  	  	 
+206.213.209.0/24 	WDC external subnet 	Firewalls, vDMZ NAT, B2B-VPN, DNS NAT, Proxy NAT
+206.213.211.0/24 	WDC DMZ VIP 	win-fw-inetdmz
+206.213.212.0/24 	WDC DMZ VIP 	win-fw-inetdmz
+206.213.213.0/24 	WDC DMZ VIP 	win-fw-inetdmz
+206.213.215.0/24 	WDC Office Extend 	win-fw-officeext  (ClientVPN, SDWAN, Meraki, Aruba)
+206.213.223.0/24 	WDC OpenStack 	win-fw-inetdmz
+  	  	 
+206.213.233.0/24 	MDC OpenStack 	mid-fw-inetdmz
+206.213.234.0/24 	MDC OpenStack 	mid-fw-inetdmz
+206.213.240.0/24 	MDC DMZ VIP 	mid-fw-inetdmz
+206.213.241.0/24 	MDC DMZ VIP 	mid-fw-inetdmz
+206.213.243.0/24 	QA DMZ VIP 	mid-fw-perfdmz
+206.213.244.0/24 	QA DMZ VIP 	mid-fw-perfdmz
+206.213.246.0/24 	QA DMZ VIP 	mid-fw-perfdmz
+206.213.251.0/24 	MDC external subnet 	Gateway of Last Resort, Firewalls, vDMZ NAT, B2B-VPN, DNS NAT, Proxy NAT
+206.213.253.0/24 	MDC DMZ VIP 	mid-fw-inetdmz
+206.213.254.0/24 	MDC Office Extend 	mid-fw-officeext  (ClientVPN, SDWAN, Meraki, Aruba, Aironet)
+	  	 
+206.213.255.0/24 	Infrastructure 	Loopbacks, Inter-DC links
+	  	 
+
+ 
+
+      Private Line/B2B VPN Subnet Assignments
+
+ 
+Subnet 	Usage 	Servicing Device
+206.213.198.0/24 	Universal NAT 	any firewall
+206.213.199.0/25 	MDC GLR 	Gateway of Last Resort
+206.213.199.128/25 	WDC GLR 	Gateway of Last Resort (backup)
+206.213.200.0/24 	MDC EDMZ NAT 	mid-fw-edmz
+206.213.201.0/24 	MDC EDMZ 	mid-fw-edmz
+206.213.202.0/24 	MDC EDMZ NAT 	mid-fw-edmz
+206.213.203.0/24 	MDC EDMZ NAT 	mid-fw-edmz
+206.213.204.0/24 	MDC EDMZ Loopbacks 	mid-fw-edmz
+206.213.205.0/24 	MDC Affiliate server farm 	midfire19
+206.213.206.0/24 	WDC Affiliate server farm 	midfire19
+206.213.207.0/24 	WDC EDMZ 	win-fw-edmz
+206.213.208.0/24 	WDC EDMZ 	win-fw-edmz
+206.213.210.0/24 	WDC Secure Segment 	win-fw-dmz
+206.213.216.0/24 	WDC AVEnue 	Firewall internal interfaces
+206.213.217.0/24 	WDC Surf 	Firewall internal & Proxy server interfaces
+206.213.219.0/24 	WDC EDMZ loopbacks 	win-fw-edmz
+206.213.220.0/24 	WDC VPN NAT 	win-fw-vpn2
+206.213.221.0/24 	WDC VPN NAT 	win-fw-vpn1
+206.213.226.0/24 	PDC Surf 	Firewall internal & Proxy server interfaces
+206.213.228.0/24 	Middletown CVS DMZ 	mid-fw-cvs
+206.213.229.0/24 	Windsorfs CVS DMZ 	win-fw-cvs
+206.213.230.0/24 	MDC VPN NAT 	mid-fw-vpn2
+206.213.231.0/24 	MDC VPN NAT 	mid-fw-vpn1
+206.213.245.128/25 	QA Secure Segment 	win-fw-dmz
+206.213.247.0/24 	MDC AVEnue 	Firewall internal interfaces
+206.213.248.0/24 	MDC Surf 	Firewall internal & Proxy server interfaces
+206.213.252.0/24 	MDC Secure Segment 	mid-fw-dmz
+
+
+
+Aetna MDC 	Verizon 	10GE 	u336409 	Internet Eng. 	152.179.101.12/30 	206.213.192.0/18
+	Lumen/CenturyLink 	10GE 	BDKW3591 	Internet Eng. 	4.14.179.124/30 	206.213.192.0/18
+Aetna WDC 	AT&T 	10GE 	L4YS.989809 	Internet Eng. 	12.251.249.196/30 	206.213.192.0/18
+	Verizon 	10GE 	C0196847 	Internet Eng. 	152.179.14.4/30 	206.213.192.0/18
+Aetna PDC 	AT&T 	10GE 	L4YS.979686 	Internet Eng. 	12.118.72.8/30 	206.213.192.0/24 206.213.193.0/24 208.66.124.0/22 12.10.217.0/24 65.241.18.0/24
+	Verizon 	10GE 	C0158731 	Internet Eng. 	204.148.123.216/30 	206.213.192.0/24 206.213.193.0/24 208.66.124.0/22 12.10.217.0/24 65.241.18.0/24
+  	  	  	  	  	  	 
+VizNet 	AT&T 	1GE 	IZEC533989 	Internet Eng. 	12.252.19.128/29
+12.154.151.80/29 	no BGP
+	  	  	  	  	  	 
+PDS Phoneix 	uses Aetna PDC 	  	  	PDCHS Operations 	  	
+
+12.34.73.0/24
+12.45.232.0/24
+12.47.172.0/24
+12.162.248.0/24
+12.191.200.0/23
+63.110.64.0/24
+63.110.246.0/24
+65.197.234.0/24
+65.203.129.0/24
+74.116.80.0/22
+208.44.106.0/24
+	
+PDS Englewood 	Level3 	10GE 		PDCHS Operations 	??? 	63.76.24.0/24
+	Verizon 	1G 	???? 	PDCHS Operations 	??? 	63.76.24.0/24
+  	  	  	  	  	  	 
+
+ AT&T WDC
+	
+
+Windsor
+	
+
+L4YS.989809..ATI
+	
+
+12.251.249.198
+	
+
+Te0/0/9
+	
+
+win-rr-l2-internet-1
+	
+
+Cambridge, MA
+
+Verizon WDC
+	
+
+Windsor
+	
+
+C0196847
+	
+
+152.179.14.4/30
+	
+
+Te0/0/9.47
+	
+
+win-rr-l2-internet-2
+	
+
+Hartford, CT
+
+Verizon MDC
+	
+
+Middletown
+	
+
+u336409
+	
+
+152.179.101.14
+	
+
+Te0/0/9
+	
+
+mid-rr-l3-internet-1
+	
+
+New York, NY
+
+Lumen/CenturyLink
+	
+
+Middletown
+	
+
+BDKW3591
+	
+
+4.14.179.126
+	
+
+Te0/0/9
+	
+
+mid-rr-l3-internet-2
+	
+
+Boston, MA
+
+Verizon PDC
+	
+
+Phoenix
+	
+
+C0158731
+	
+
+204.148.123.218
+	
+
+Te9/0/0.100
+	
+
+pdc-rr-l1-internet-1
+	
+
+ 
+
+AT&T PDC
+	
+
+Phoenix
+	
+
+L4YS.979686
+	
+
+12.118.72.10
+	
+
+Te1/0/9
+	
+
+pdc-rr-l1-internet-2
+	
+Prefix
+	
+
+Verizon-MDC
+	
+
+Verizon-WDC
+	
+
+AT&T
+	
+
+Lumen/CenturyLink
+	
+
+Next Hop
+	
+
+Comment
+
+206.213.192.0/18
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+Null0
+	
+
+supernet
+
+206.213.192.0/19
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+ 
+	
+
+Null0
+	
+
+aggregate
+
+206.213.196.0/24
+	
+
+✔
+	
+
+ 
+	
+
+ 
+	
+
+✔
+	
+
+mid-fw-services
+	
+
+MDC Office365
+
+206.213.197.0/24
+	
+
+ 
+	
+
+✔
+	
+
+✔
+	
+
+ 
+	
+
+win-fw-services
+	
+
+WDC Office365
+
+206.213.209.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+Connected
+	
+
+WDC External
+
+206.213.211.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+win-fw-inetdmz
+	
+
+WDC DMZ VIPs
+
+206.213.212.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+win-fw-inetdmz
+	
+
+WDC DMZ VIPs
+
+206.213.213.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+win-fw-inetdmz
+	
+
+WDC DMZ VIPs
+
+206.213.215.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+Null0
+	
+
+summary
+
+⇒ 206.213.215.0/26
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+win-fw-officeext
+	
+
+SDWAN, Meraki, Aruba
+
+⇒ 206.213.215.64/26
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+win-vpn-l2-X
+	
+
+ClientVPN
+
+⇒ 206.213.215.128/26
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+win-fw-officeext
+	
+
+SDWAN, Meraki, Aruba
+
+206.213.223.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+win-fw-inetdmz
+	
+
+WDC OpenStack
+
+206.213.224.0/19
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+ 
+	
+
+Null0
+	
+
+aggregate
+
+206.213.233.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+mid-fw-inetdmz
+	
+
+MDC OpenStack
+
+206.213.240.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+mid-fw-inetdmz
+	
+
+MDC DMZ VIPs
+
+206.213.241.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+mid-fw-inetdmz
+	
+
+MDC DMZ VIPs
+
+206.213.243.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+mid-fw-perfdmz
+	
+
+QA DMZ VIPs
+
+206.213.244.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+mid-fw-perfdmz
+	
+
+QA DMZ VIPs
+
+206.213.245.0/24
+	
+
+✔
+	
+
+ 
+	
+
+ 
+	
+
+✔
+	
+
+mid-fw-perfdmz
+	
+
+QA DMZ Real
+
+206.213.246.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+mid-fw-perfdmz
+	
+
+QA DMZ VIPs
+
+206.213.251.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+Connected
+	
+
+MDC External
+
+206.213.253.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+mid-fw-inetdmz
+	
+
+MDC DMZ VIPs
+
+206.213.254.0/24
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+✔
+	
+
+Null0
+	
+
+summary
+
+⇒ 206.213.254.0/26
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+mid-fw-officeext
+	
+
+SDWAN, Meraki, Aruba
+
+⇒ 206.213.254.64/26
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+mid-vpn-l3-X
+	
+
+ClientVPN
+
+⇒ 206.213.254.128/26
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+ 
+	
+
+mid-fw-officeext
+	
+
+SDWAN, Meraki, Aruba
+
+BGP Prefix Announcements - Phoenix - Aetna
+
+Prefix
+	
+
+Verizon
+	
+
+AT&T
+	
+
+Next Hop
+	
+
+Comment
+
+Prefix
+	
+
+Verizon
+	
+
+AT&T
+	
+
+Next Hop
+	
+
+Comment
+
+206.213.192.0/24
+	
+
+✔
+	
+
+✔
+	
+
+Connected
+	
+
+PDC External
+
+206.213.193.0/24
+	
+
+✔
+	
+
+✔
+	
+
+pdc-fw-services
+	
+
+PDC Proxy
+
+208.66.124.0/22
+	
+
+✔
+	
+
+✔
+	
+
+Null0
+	
+
+old CVTY network
+
+12.10.217.0/24
+	
+
+✔
+	
+
+✔
+	
+
+Connected
+	
+
+CVTY NATs
+
+65.241.18.0/24
+	
+
+✔
+	
+
+✔
+	
+
+Connected
+	
+
+CVTY NATs
+
+208.44.106.0
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+NAB
+
+74.116.80.0/22
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+Meritain
+
+63.110.246.0/24
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+PDCHS Core network
+
+63.110.64.0/24
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+Activehealth
+
+65.197.234.0/24
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+Payflex
+
+65.203.129.0/24
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+Activehealth
+
+12.34.73.0/24
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+Payflex
+
+12.45.232.0/24
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+NAB
+
+12.47.172.0/24
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+Bswift
+
+12.162.248.0/24
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+NAB
+
+12.191.200.0/23
+	
+
+✔
+	
+
+✔
+	
+
+PDCHS
+	
+
+HDMS
+ 

@@ -1,0 +1,80 @@
+
+CenturyLink MDC BGP config:
+
+Level3 Router Config
+CMBRMAOR##W.JUNIPER.MX960.01138
+
+set protocols bgp group peer-4.31.154.66 type external
+set protocols bgp group peer-4.31.154.66 description "BCPZ9290::AETNA INC."
+set protocols bgp group peer-4.31.154.66 advertise-peer-as
+set protocols bgp group peer-4.31.154.66 import peer-4.31.154.66
+set protocols bgp group peer-4.31.154.66 import customer
+set protocols bgp group peer-4.31.154.66 import bb2
+set protocols bgp group peer-4.31.154.66 family inet any prefix-limit maximum 2004
+set protocols bgp group peer-4.31.154.66 family inet any prefix-limit teardown 90
+set protocols bgp group peer-4.31.154.66 export send-default
+set protocols bgp group peer-4.31.154.66 export send-full-routes
+set protocols bgp group peer-4.31.154.66 export none
+set protocols bgp group peer-4.31.154.66 remove-private
+set protocols bgp group peer-4.31.154.66 peer-as 6646
+set protocols bgp group peer-4.31.154.66 neighbor 4.31.154.66
+set policy-options policy-statement peer-4.31.154.66 term route-set1 from route-filter 206.213.192.0/19 upto /24
+set policy-options policy-statement peer-4.31.154.66 term route-set1 from route-filter 206.213.224.0/19 upto /24
+set policy-options policy-statement peer-4.31.154.66 term route-set1 then next policy
+set policy-options policy-statement peer-4.31.154.66 term route-set1 then accept
+set policy-options policy-statement peer-4.31.154.66 term reject then reject
+set firewall filter internet term customer-bgp from source-address 4.31.154.66/32
+
+
+AT&T WDC BGP config:
+
+AT&T Router - Juniper T640
+
+show configuration | match 12.251.249.198 | display set 
+set protocols bgp group V4_EBGP neighbor 12.251.249.198 apply-groups AG_FULL_ROUTES
+set protocols bgp group V4_EBGP neighbor 12.251.249.198 description "CUST | AETNA LIFE INSURANCE COMPANY"
+set protocols bgp group V4_EBGP neighbor 12.251.249.198 hold-time 45
+set protocols bgp group V4_EBGP neighbor 12.251.249.198 import set_pl_00061
+set protocols bgp group V4_EBGP neighbor 12.251.249.198 authentication-key "****************************"
+set protocols bgp group V4_EBGP neighbor 12.251.249.198 peer-as 6646
+
+
+{master}
+mo7382@cb1ma403me3> show configuration policy-options policy-statement set_pl_00061 
+term 10 {
+    from {
+        route-filter 206.213.192.0/18 prefix-length-range /18-/24;
+        route-filter 206.213.192.0/19 prefix-length-range /19-/24;
+        route-filter 206.213.209.0/24 prefix-length-range /24-/24;
+        route-filter 206.213.211.0/24 prefix-length-range /24-/24;
+        route-filter 206.213.215.0/24 prefix-length-range /24-/24;
+        route-filter 206.213.224.0/19 prefix-length-range /19-/24;
+        route-filter 206.213.251.0/24 prefix-length-range /24-/24;
+        route-filter 206.213.253.0/24 prefix-length-range /24-/24;
+        route-filter 206.213.254.0/24 prefix-length-range /24-/24; 
+
+
+AT&T PDC BGP config:
+      
+        __AT&T Router
+
+RP/0/RSP0/CPU0:phmaz403me9#sh run prefix-set pl_00061
+prefix-set pl_00061
+  12.10.217.0/24,
+  12.34.73.0/24,
+  12.45.232.0/24,
+  12.47.172.0/24,
+  12.162.248.0/24,
+  12.191.200.0/23,
+  63.110.64.0/24,
+  63.110.246.0/24,
+  65.197.234.0/24,
+  65.203.129.0/24,
+  65.241.18.0/24,
+  74.116.80.0/22,
+  206.213.192.0/24,
+  206.213.193.0/24,
+  206.213.194.0/24,
+  208.44.106.0/24,
+  208.66.124.0/22
+end-set
